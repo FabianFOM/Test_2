@@ -14,3 +14,293 @@
     <p>Diese Testseite wurde über GitHub Actions deployed.</p>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>Mein Produkt – KI Assistent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0f172a;
+            color: #e5e7eb;
+        }
+
+        header {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            background: radial-gradient(circle at top, #1d4ed8, #020617);
+        }
+
+        header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2rem;
+        }
+
+        header p {
+            margin: 0;
+            color: #9ca3af;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 3rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 1rem;
+            border: 1px solid #1f2937;
+            padding: 1.5rem;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .card p {
+            margin-top: 0;
+            color: #9ca3af;
+        }
+
+        /* Chat-Widget */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 420px;
+            border-radius: 1rem;
+            border: 1px solid #1f2937;
+            background: radial-gradient(circle at top left, #1d283a, #020617);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .chat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+        }
+
+        .chat-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .chat-subtitle {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+
+        .msg {
+            max-width: 80%;
+            padding: 0.6rem 0.75rem;
+            border-radius: 0.8rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .msg.user {
+            margin-left: auto;
+            background: #2563eb;
+            color: white;
+            border-bottom-right-radius: 0.1rem;
+        }
+
+        .msg.bot {
+            margin-right: auto;
+            background: #020617;
+            border: 1px solid #1f2937;
+            border-bottom-left-radius: 0.1rem;
+        }
+
+        .chat-input-area {
+            padding: 0.75rem;
+            border-top: 1px solid #1f2937;
+            display: flex;
+            gap: 0.5rem;
+            background: #020617;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 0.55rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid #374151;
+            background: #020617;
+            color: #e5e7eb;
+            font-size: 0.9rem;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px rgba(59,130,246,0.4);
+        }
+
+        .chat-input-area button {
+            padding: 0.55rem 0.95rem;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6, #22c55e);
+            color: white;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .chat-input-area button:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .hint {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.4rem;
+        }
+
+        @media (min-width: 900px) {
+            main {
+                grid-template-columns: 1.1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Mein Produkt – Interaktive KI Seite</h1>
+    <p>Stelle Fragen zu meinem Produkt direkt an den integrierten Assistenten.</p>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Über mein Produkt</h2>
+        <p>
+            Hier beschreibst du kurz dein Produkt: Was macht es? Für wen ist es gedacht?
+            Welche Probleme löst es? Passe diesen Text einfach im HTML an.
+        </p>
+        <p>
+            Beispiel: „Dieses Tool unterstützt Studierende im Studiengang Management und
+            Digitalisierung bei Datenanalyse, Finanzthemen und Projektarbeit.“
+        </p>
+    </section>
+
+    <section class="card">
+        <h2>Produkt-KI – stelle deine Fragen</h2>
+        <p class="hint">
+            Tipp: Frage z.B. „Was kann dieses Produkt?“ oder „Wie hilft mir das im Studium?“.
+        </p>
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-dot"></div>
+                <div>
+                    <div class="chat-title">Produkt‑Assistent (Demo‑KI)</div>
+                    <div class="chat-subtitle">Antwortet mit vordefiniertem Wissen über dein Produkt</div>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">
+                    Hi, ich bin dein Produkt‑Assistent. Stell mir eine Frage zu deinem Produkt, z.B.
+                    „Was sind die wichtigsten Features?“
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input id="chatInput" type="text" placeholder="Frage zu deinem Produkt eingeben..." />
+                <button id="sendBtn">Senden</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const messagesEl = document.getElementById("chatMessages");
+    const inputEl = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    function appendMessage(text, sender) {
+        const div = document.createElement("div");
+        div.classList.add("msg", sender);
+        div.textContent = text;
+        messagesEl.appendChild(div);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function getBotReply(userText) {
+        const text = userText.toLowerCase();
+
+        // Hier definierst du die „KI-Logik“ über dein Produkt:
+        if (text.includes("was kann") || text.includes("was macht")) {
+            return "Mein Produkt unterstützt dich bei Management- und Digitalisierungsaufgaben, z.B. Datenanalyse, Reporting und Strukturierung deiner Projekte.";
+        }
+
+        if (text.includes("feature") || text.includes("funktionen") || text.includes("features")) {
+            return "Wichtige Features: übersichtliches Dashboard, einfache Dateneingabe, automatische Auswertungen und Export für Präsentationen.";
+        }
+
+        if (text.includes("studium") || text.includes("uni")) {
+            return "Im Studium hilft dir das Produkt, Projektarbeiten zu strukturieren, Kennzahlen aufzubereiten und Inhalte für Präsentationen aufzubereiten.";
+        }
+
+        if (text.includes("preis") || text.includes("kosten")) {
+            return "Die Demo-Version ist kostenlos. Für ein reales Produkt könntest du hier deine Preismodelle erklären.";
+        }
+
+        if (text.includes("kontakt") || text.includes("support")) {
+            return "Für Support kannst du mich direkt kontaktieren – hier würdest du normalerweise deine E-Mail oder LinkedIn angeben.";
+        }
+
+        // Standardantwort
+        return "Gute Frage! Diese Demo-KI ist noch einfach. Formuliere deine Frage konkret zu Funktionen, Nutzen im Studium oder Preis – oder passe den Code an deine eigenen Antworten an.";
+    }
+
+    function handleSend() {
+        const text = inputEl.value.trim();
+        if (!text) return;
+
+        appendMessage(text, "user");
+        inputEl.value = "";
+        sendBtn.disabled = true;
+
+        setTimeout(() => {
+            const reply = getBotReply(text);
+            appendMessage(reply, "bot");
+            sendBtn.disabled = false;
+            inputEl.focus();
+        }, 400);
+    }
+
+    sendBtn.addEventListener("click", handleSend);
+    inputEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleSend();
+        }
+    });
+</script>
+</body>
+</html>
