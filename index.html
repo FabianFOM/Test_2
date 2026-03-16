@@ -5,55 +5,114 @@
     <title>Kleiderschrank Konfigurator – KI Assistent</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
+        :root {
+            --bg: #020617;
+            --bg-card: #0b1220;
+            --border: #1f2937;
+            --accent: #3b82f6;
+            --accent-soft: #1d4ed8;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             margin: 0;
             padding: 0;
-            background: #0f172a;
-            color: #e5e7eb;
+            background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
+            color: var(--text-main);
         }
 
         header {
-            padding: 2rem 1.5rem;
+            padding: 2.5rem 1.5rem 1.5rem;
             text-align: center;
-            background: radial-gradient(circle at top, #1d4ed8, #020617);
+            background: radial-gradient(circle at top, var(--accent-soft), #020617);
+            border-bottom: 1px solid rgba(15,23,42,0.6);
         }
 
         header h1 {
-            margin: 0 0 0.5rem 0;
-            font-size: 2rem;
+            margin: 0 0 0.8rem 0;
+            font-size: 2.1rem;
         }
 
         header p {
             margin: 0;
-            color: #9ca3af;
+            color: var(--text-muted);
+            max-width: 680px;
+            margin-inline: auto;
         }
 
         main {
-            max-width: 1150px;
-            margin: 2rem auto;
-            padding: 0 1.5rem 3rem;
+            max-width: 1200px;
+            margin: 1.8rem auto 3rem;
+            padding: 0 1.5rem;
             display: grid;
-            gap: 2rem;
+            gap: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .grid-two {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+            gap: 1.5rem;
+        }
+
+        .grid-three {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 960px) {
+            .grid-two {
+                grid-template-columns: 1fr;
+            }
         }
 
         .card {
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(11, 18, 32, 0.98);
             border-radius: 1rem;
-            border: 1px solid #1f2937;
-            padding: 1.5rem;
+            border: 1px solid var(--border);
+            padding: 1.4rem 1.5rem;
             box-shadow: 0 18px 40px rgba(0,0,0,0.35);
         }
 
-        .card h2 {
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-            font-size: 1.3rem;
+        .card-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
         }
 
-        .card p {
-            margin-top: 0;
-            color: #9ca3af;
+        .badge {
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.35);
+            padding: 0.15rem 0.6rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
         }
 
         label {
@@ -69,15 +128,14 @@
             border-radius: 0.6rem;
             border: 1px solid #374151;
             background: #020617;
-            color: #e5e7eb;
+            color: var(--text-main);
             font-size: 0.9rem;
         }
 
-        .config-row {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.75rem;
-            margin-top: 0.75rem;
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(59,130,246,0.35);
         }
 
         .config-summary {
@@ -85,34 +143,14 @@
             padding: 0.7rem 0.9rem;
             border-radius: 0.7rem;
             border: 1px dashed #4b5563;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             background: #020617;
         }
 
-        .hint {
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-top: 0.4rem;
-        }
-
-        /* Layout im linken Bereich: Formular + Vorschau */
-        .layout-left {
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(230px, 0.9fr);
-            gap: 1.2rem;
-            margin-top: 0.8rem;
-        }
-
-        @media (max-width: 920px) {
-            .layout-left {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Visuelle Schrankvorschau (SVG-ähnlicher Stil mit CSS) */
+        /* VISUELLE VORSCHAU */
         .preview-wrapper {
             border-radius: 0.9rem;
-            border: 1px solid #1f2937;
+            border: 1px solid var(--border);
             background: radial-gradient(circle at top, #020617, #020617);
             padding: 0.9rem;
             display: flex;
@@ -123,8 +161,8 @@
         }
 
         .preview-title {
-            font-size: 0.85rem;
-            color: #9ca3af;
+            font-size: 0.82rem;
+            color: var(--text-muted);
             text-align: center;
         }
 
@@ -139,7 +177,6 @@
             overflow: hidden;
         }
 
-        /* Grundkörper des Schranks */
         .wardrobe-body {
             position: absolute;
             bottom: 6%;
@@ -149,12 +186,10 @@
             height: 80%;
             border-radius: 0.4rem;
             border: 2px solid #111827;
-            box-sizing: border-box;
             background: linear-gradient(135deg, #e5e7eb, #9ca3af);
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
         }
 
-        /* Türen-Aufteilung (je nach Typ später mit JS angepasst) */
         .door {
             position: absolute;
             top: 4%;
@@ -163,10 +198,7 @@
             border-right: 1px solid rgba(15, 23, 42, 0.5);
         }
 
-        .door.left {
-            left: 0;
-        }
-
+        .door.left { left: 0; }
         .door.right {
             right: 0;
             border-right: none;
@@ -182,15 +214,9 @@
             background: rgba(15, 23, 42, 0.7);
         }
 
-        .door-handle.left {
-            right: 8px;
-        }
+        .door-handle.left { right: 8px; }
+        .door-handle.right { left: 8px; }
 
-        .door-handle.right {
-            left: 8px;
-        }
-
-        /* Schiebetüren-Optik */
         .sliding-overlay {
             position: absolute;
             inset: 4% 6% 16% 6%;
@@ -210,15 +236,9 @@
             opacity: 0;
         }
 
-        .sliding-panel.left-panel {
-            left: 0;
-        }
+        .sliding-panel.left-panel { left: 0; }
+        .sliding-panel.right-panel { right: 0; }
 
-        .sliding-panel.right-panel {
-            right: 0;
-        }
-
-        /* Spiegel-Effekt */
         .mirror-stripe {
             position: absolute;
             inset: 12% 20% 20% 20%;
@@ -227,7 +247,6 @@
             opacity: 0;
         }
 
-        /* Innenleben (Symbolik) */
         .interior-bars {
             position: absolute;
             bottom: 6%;
@@ -245,7 +264,6 @@
             background: rgba(15, 23, 42, 0.8);
         }
 
-        /* LED-Leiste */
         .led-strip {
             position: absolute;
             top: 3%;
@@ -257,7 +275,6 @@
             box-shadow: 0 0 0 rgba(56, 189, 248, 0.0);
         }
 
-        /* Licht/Schatten für Premium */
         .premium-glow {
             position: absolute;
             inset: 0;
@@ -265,7 +282,6 @@
             box-shadow: 0 0 35px rgba(245, 158, 11, 0.0);
         }
 
-        /* Eckschrank-Effekt (leicht abgeschrägte Seite) */
         .corner-side {
             position: absolute;
             bottom: 6%;
@@ -282,24 +298,30 @@
 
         .preview-meta {
             font-size: 0.78rem;
-            color: #9ca3af;
+            color: var(--text-muted);
             text-align: center;
         }
 
-        /* Chat-Widget */
+        /* CHAT / KI */
         .chat-container {
             display: flex;
             flex-direction: column;
-            height: 420px;
+            height: 430px;
             border-radius: 1rem;
-            border: 1px solid #1f2937;
-            background: radial-gradient(circle at top left, #1d283a, #020617);
+            border: 1px solid var(--border);
+            background: radial-gradient(circle at top left, #1f2937, #020617);
             overflow: hidden;
         }
 
         .chat-header {
             padding: 0.9rem 1rem;
             border-bottom: 1px solid #1f2937;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .chat-header-top {
             display: flex;
             align-items: center;
             gap: 0.6rem;
@@ -320,7 +342,17 @@
 
         .chat-subtitle {
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: var(--text-muted);
+        }
+
+        .chat-benefits {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .chat-benefits span {
+            display: inline-block;
+            margin-right: 0.25rem;
         }
 
         .chat-messages {
@@ -340,7 +372,7 @@
 
         .msg.user {
             margin-left: auto;
-            background: #2563eb;
+            background: var(--accent);
             color: white;
             border-bottom-right-radius: 0.1rem;
         }
@@ -366,13 +398,13 @@
             border-radius: 999px;
             border: 1px solid #374151;
             background: #020617;
-            color: #e5e7eb;
+            color: var(--text-main);
             font-size: 0.9rem;
         }
 
         .chat-input-area input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--accent);
             box-shadow: 0 0 0 1px rgba(59,130,246,0.4);
         }
 
@@ -380,7 +412,7 @@
             padding: 0.55rem 0.95rem;
             border-radius: 999px;
             border: none;
-            background: linear-gradient(135deg, #3b82f6, #22c55e);
+            background: linear-gradient(135deg, var(--accent), #22c55e);
             color: white;
             font-size: 0.85rem;
             cursor: pointer;
@@ -392,164 +424,224 @@
             cursor: default;
         }
 
-        @media (min-width: 950px) {
-            main {
-                grid-template-columns: 1.1fr 1fr;
-            }
+        small {
+            font-size: 0.78rem;
+            color: var(--text-muted);
         }
     </style>
 </head>
 <body>
 <header>
     <h1>Kleiderschrank Konfigurator mit KI‑Assistent</h1>
-    <p>Visualisiere deinen Wunschschrank, passe ihn an und lass die KI eine passende Konfiguration für dich einstellen.</p>
+    <p>
+        Wähle einen Schrank‑Typ, passe Maße und Ausstattung an und nutze den integrierten KI‑Assistenten, 
+        um deinen Wunschschrank in wenigen Schritten zusammenzustellen.
+    </p>
 </header>
 
 <main>
-    <!-- PRODUKT / KONFIGURATOR -->
-    <section class="card">
-        <h2>Mein Kleiderschrank‑Produkt</h2>
-        <p>
-            Klassische Kundenwünsche sind z.B.: „Viel Platz für Hängen“, „Viele Schubladen für T‑Shirts“, 
-            „Schrank für kleines Zimmer“, „Ecklösung“, „Spiegeltüren“ oder „modern in Holzoptik“. 
-            Diese Bedürfnisse werden hier im Konfigurator und in der KI berücksichtigt.
-        </p>
 
-        <div class="layout-left">
-            <!-- Formular -->
+    <!-- OBEN: Überblick / Nutzen -->
+    <section class="card">
+        <div class="card-header">
             <div>
-                <label for="wardrobeType">Schrank‑Typ auswählen</label>
-                <select id="wardrobeType">
-                    <option value="basic">1) Basic Kleiderschrank (2‑Türer)</option>
-                    <option value="sliding">2) Kleiderschrank mit Schiebetüren</option>
-                    <option value="corner">3) Eckkleiderschrank</option>
-                    <option value="premium">4) Premium Kleiderschrank (groß)</option>
-                </select>
-
-                <div class="config-row">
-                    <div>
-                        <label for="height">Höhe (cm)</label>
-                        <input type="number" id="height" min="180" max="280" value="220" />
-                    </div>
-                    <div>
-                        <label for="width">Breite (cm)</label>
-                        <input type="number" id="width" min="80" max="400" value="200" />
-                    </div>
-                    <div>
-                        <label for="depth">Tiefe (cm)</label>
-                        <input type="number" id="depth" min="40" max="80" value="60" />
-                    </div>
-                </div>
-
-                <div class="config-row">
-                    <div>
-                        <label for="color">Farbe / Dekor</label>
-                        <select id="color">
-                            <option value="weiß matt">Weiß matt (hell & freundlich)</option>
-                            <option value="eiche hell">Eiche hell (skandinavisch)</option>
-                            <option value="eiche dunkel">Eiche dunkel (warm & edel)</option>
-                            <option value="grau">Betongrau (modern)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="interior">Innenausstattung</label>
-                        <select id="interior">
-                            <option value="Basis: Kleiderstangen + Fächer">Basis: Kleiderstangen + Fächer</option>
-                            <option value="Viele Schubladen">Viele Schubladen</option>
-                            <option value="Viel Hängefläche">Viel Hängefläche</option>
-                            <option value="Mix aus Fächern & Schubladen">Mix aus Fächern & Schubladen</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="extras">Extras</label>
-                        <select id="extras">
-                            <option value="keine Extras">Keine Extras</option>
-                            <option value="Spiegeltüren">Spiegeltüren an den Türen</option>
-                            <option value="LED-Beleuchtung">LED‑Beleuchtung innen</option>
-                            <option value="Schubladen mit Softclose">Softclose für Schubladen</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="config-summary" id="configSummary">
-                    Aktuelle Konfiguration: Basic Kleiderschrank, 220 × 200 × 60 cm, Farbe Weiß matt,
-                    Innenausstattung: Basis: Kleiderstangen + Fächer, Extras: keine Extras.
-                </div>
-
-                <p class="hint">
-                    Typische Fragen: „Welcher Schrank für kleines Zimmer?“, „Was, wenn ich viel Business‑Hemden habe?“,
-                    „Welche Farbe lässt den Raum größer wirken?“ – die KI berät dich dazu und setzt den Konfigurator.
-                </p>
-            </div>
-
-            <!-- Visuelle Vorschau -->
-            <div class="preview-wrapper">
-                <div class="preview-title">Schrank‑Vorschau (symbolische Darstellung)</div>
-                <div class="preview-canvas">
-                    <div class="wardrobe-body" id="wardrobeBody">
-                        <div class="corner-side" id="cornerSide"></div>
-
-                        <div class="door left" id="doorLeft">
-                            <div class="door-handle left"></div>
-                        </div>
-                        <div class="door right" id="doorRight">
-                            <div class="door-handle right"></div>
-                        </div>
-
-                        <div class="sliding-overlay" id="slidingOverlay">
-                            <div class="sliding-panel left-panel" id="slidingLeft"></div>
-                            <div class="sliding-panel right-panel" id="slidingRight"></div>
-                        </div>
-
-                        <div class="mirror-stripe" id="mirrorStripe"></div>
-
-                        <div class="interior-bars" id="interiorBars">
-                            <div class="interior-bar" style="left:10%;height:45%;"></div>
-                            <div class="interior-bar" style="left:32%;height:60%;"></div>
-                            <div class="interior-bar" style="left:54%;height:40%;"></div>
-                            <div class="interior-bar" style="left:76%;height:55%;"></div>
-                        </div>
-
-                        <div class="led-strip" id="ledStrip"></div>
-                        <div class="premium-glow" id="premiumGlow"></div>
-                    </div>
-                </div>
-                <div class="preview-meta" id="previewMeta">
-                    Darstellung angepasst an Typ, Maße und Farbe. Extras wie Spiegel oder LED werden optisch hervorgehoben.
+                <div class="section-title">Konzept der Seite</div>
+                <div class="section-subtitle">
+                    Links konfigurierst du deinen Kleiderschrank manuell und siehst eine visuelle Vorschau. 
+                    Rechts unterstützt dich eine textbasierte KI bei der Auswahl – so wie in einem digitalen Beratungsgespräch.
                 </div>
             </div>
+            <span class="badge">Uni‑Projekt · Demo‑Prototyp</span>
         </div>
     </section>
 
-    <!-- KI / CHAT -->
-    <section class="card">
-        <h2>Schrank‑KI – beschreibe deinen Wunsch</h2>
-        <p class="hint">
-            Beispiel: „Ich brauche einen großen, hellen Schrank mit viel Platz zum Hängen, ca. 3 Meter breit,
-            mit Spiegeltüren und LED‑Licht für ein mittelgroßes Schlafzimmer.“  
-            Oder: „Ich habe wenig Platz, der Schrank soll in eine Ecke passen und eher schlicht weiß sein.“
-        </p>
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="chat-dot"></div>
+    <div class="grid-two">
+        <!-- LINKS: KONFIGURATOR + VORSCHAU -->
+        <section class="card">
+            <div class="card-header">
                 <div>
-                    <div class="chat-title">Kleiderschrank‑Assistent (Demo‑KI)</div>
-                    <div class="chat-subtitle">Versteht deine Bedürfnisse und setzt den Konfigurator für dich</div>
+                    <div class="section-title">Produkt‑Konfigurator</div>
+                    <div class="section-subtitle">
+                        Wähle einen Schrank‑Typ, passe Maße, Farbe, Innenleben und Extras an. 
+                        Die Vorschau passt sich automatisch an.
+                    </div>
+                </div>
+                <span class="badge">1 · Manuelle Konfiguration</span>
+            </div>
+
+            <div class="grid-two" style="gap: 1.25rem;">
+                <!-- Formular -->
+                <div>
+                    <label for="wardrobeType">Schrank‑Typ</label>
+                    <select id="wardrobeType">
+                        <option value="basic">Basic Kleiderschrank (2‑Türer)</option>
+                        <option value="sliding">Kleiderschrank mit Schiebetüren</option>
+                        <option value="corner">Eckkleiderschrank</option>
+                        <option value="premium">Premium Kleiderschrank (groß)</option>
+                    </select>
+
+                    <div class="grid-three">
+                        <div>
+                            <label for="height">Höhe (cm)</label>
+                            <input type="number" id="height" min="180" max="280" value="220" />
+                        </div>
+                        <div>
+                            <label for="width">Breite (cm)</label>
+                            <input type="number" id="width" min="80" max="400" value="200" />
+                        </div>
+                        <div>
+                            <label for="depth">Tiefe (cm)</label>
+                            <input type="number" id="depth" min="40" max="80" value="60" />
+                        </div>
+                    </div>
+
+                    <div class="grid-three">
+                        <div>
+                            <label for="color">Farbe / Dekor</label>
+                            <select id="color">
+                                <option value="weiß matt">Weiß matt (hell & freundlich)</option>
+                                <option value="eiche hell">Eiche hell (skandinavisch)</option>
+                                <option value="eiche dunkel">Eiche dunkel (warm & edel)</option>
+                                <option value="grau">Betongrau (modern)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="interior">Innenausstattung</label>
+                            <select id="interior">
+                                <option value="Basis: Kleiderstangen + Fächer">Basis: Kleiderstangen + Fächer</option>
+                                <option value="Viele Schubladen">Viele Schubladen</option>
+                                <option value="Viel Hängefläche">Viel Hängefläche</option>
+                                <option value="Mix aus Fächern & Schubladen">Mix aus Fächern & Schubladen</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="extras">Extras</label>
+                            <select id="extras">
+                                <option value="keine Extras">Keine Extras</option>
+                                <option value="Spiegeltüren">Spiegeltüren</option>
+                                <option value="LED-Beleuchtung">LED‑Beleuchtung innen</option>
+                                <option value="Schubladen mit Softclose">Softclose‑Schubladen</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-summary" id="configSummary">
+                        Aktuelle Konfiguration: Basic Kleiderschrank (2‑Türer), 220 × 200 × 60 cm, Farbe Weiß matt,
+                        Innenausstattung: Basis: Kleiderstangen + Fächer, Extras: keine Extras.
+                    </div>
+
+                    <p class="hint">
+                        Typische Kundenwünsche: „für kleines Zimmer“, „viel Platz zum Hängen“, „viele Schubladen für T‑Shirts“, 
+                        „Ecklösung“, „mit Spiegel“, „moderner Holzlook“. Diese Bedürfnisse werden in der Logik des Konfigurators berücksichtigt.
+                    </p>
+                </div>
+
+                <!-- Vorschau -->
+                <div class="preview-wrapper">
+                    <div class="preview-title">Schrank‑Vorschau (vereinfachte Darstellung)</div>
+                    <div class="preview-canvas">
+                        <div class="wardrobe-body" id="wardrobeBody">
+                            <div class="corner-side" id="cornerSide"></div>
+
+                            <div class="door left" id="doorLeft">
+                                <div class="door-handle left"></div>
+                            </div>
+                            <div class="door right" id="doorRight">
+                                <div class="door-handle right"></div>
+                            </div>
+
+                            <div class="sliding-overlay" id="slidingOverlay">
+                                <div class="sliding-panel left-panel" id="slidingLeft"></div>
+                                <div class="sliding-panel right-panel" id="slidingRight"></div>
+                            </div>
+
+                            <div class="mirror-stripe" id="mirrorStripe"></div>
+
+                            <div class="interior-bars" id="interiorBars">
+                                <div class="interior-bar" style="left:10%;height:45%;"></div>
+                                <div class="interior-bar" style="left:32%;height:60%;"></div>
+                                <div class="interior-bar" style="left:54%;height:40%;"></div>
+                                <div class="interior-bar" style="left:76%;height:55%;"></div>
+                            </div>
+
+                            <div class="led-strip" id="ledStrip"></div>
+                            <div class="premium-glow" id="premiumGlow"></div>
+                        </div>
+                    </div>
+                    <div class="preview-meta" id="previewMeta">
+                        Darstellung richtet sich nach Typ, ungefähren Maßen und Farbe. Extras wie Spiegel oder LED‑Licht 
+                        werden optisch hervorgehoben.
+                    </div>
                 </div>
             </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="msg bot">
-                    Hi, ich bin dein Kleiderschrank‑Assistent. Erzähle mir kurz, wie du lebst
-                    (z.B. viele Business‑Hemden, viel Sportkleidung, kleines Zimmer, Ecklösung, Spiegelwunsch),
-                    dann stelle ich dir einen passenden Schrank zusammen.
+        </section>
+
+        <!-- RECHTS: KI / CHAT -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <div class="section-title">KI‑Assistent für Schrankplanung</div>
+                    <div class="section-subtitle">
+                        Beschreibe in deinen eigenen Worten, wie du wohnst und was dir wichtig ist. 
+                        Die KI übersetzt deine Bedürfnisse in eine konkrete Konfiguration.
+                    </div>
+                </div>
+                <span class="badge">2 · KI‑Unterstützung</span>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-header-top">
+                        <div class="chat-dot"></div>
+                        <div class="chat-title">Kleiderschrank‑Assistent (regelbasierte Demo‑KI)</div>
+                    </div>
+                    <div class="chat-subtitle">
+                        Warum KI hier hilft:
+                    </div>
+                    <div class="chat-benefits">
+                        <span>• versteht Alltagsbeschreibungen („viel Sportkleidung“, „kleines Schlafzimmer“)</span>
+                        <span>• schlägt passende Schrank‑Typen vor</span><br />
+                        <span>• setzt Maße, Farbe und Extras automatisch</span>
+                        <span>• reduziert Fehlkäufe und spart Beratungszeit</span>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="msg bot">
+                        Willkommen! 👋 Beschreibe kurz deine Situation, z.B.:
+                        „kleines Zimmer, viel Business‑Hemden, Schrank soll hell sein und Spiegeltüren haben“.  
+                        Ich stelle dir dann eine passende Konfiguration ein.
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input id="chatInput" type="text" placeholder="Schreib hier deine Beschreibung oder Frage..." />
+                    <button id="sendBtn">Senden</button>
                 </div>
             </div>
-            <div class="chat-input-area">
-                <input id="chatInput" type="text" placeholder="Schreib hier deine Beschreibung oder Frage..." />
-                <button id="sendBtn">Senden</button>
+
+            <p class="hint">
+                Beispieleingaben: 
+                „Ich brauche einen Eckschrank für ein kleines Zimmer“, 
+                „Ich habe viele Anzüge und Hemden“, 
+                „Der Schrank soll modern in Grau mit LED‑Beleuchtung sein“.
+            </p>
+        </section>
+    </div>
+
+    <!-- UNTEN: Hinweis, dass es ein Demo-Prototyp ist -->
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <div class="section-title">Hinweis zum Prototyp</div>
+                <div class="section-subtitle">
+                    Diese Seite ist ein Demo‑Prototyp für ein Uni‑Projekt. Die KI‑Logik basiert auf einfachen, 
+                    vordefinierten Regeln und dient dazu zu zeigen, wie textbasierte Beratung und visueller 
+                    Konfigurator zusammenspielen können.
+                </div>
             </div>
+            <span class="badge">Status: Konzeptdemo</span>
         </div>
     </section>
+
 </main>
 
 <script>
@@ -616,21 +708,18 @@
     }
 
     function updatePreview() {
-        // Größe: wir skalieren die Höhe/Breite prozentual in Grenzen
         const w = parseInt(widthEl.value || "200", 10);
         const h = parseInt(heightEl.value || "220", 10);
 
-        const widthPercent = Math.min(85, Math.max(45, w / 4)); // grob skalieren
+        const widthPercent = Math.min(85, Math.max(45, w / 4));
         const heightPercent = Math.min(88, Math.max(65, h / 3));
 
         wardrobeBodyEl.style.width = widthPercent + "%";
         wardrobeBodyEl.style.height = heightPercent + "%";
 
-        // Farbe
         const colorStyle = mapColorToStyle(colorEl.value);
         wardrobeBodyEl.style.background = `linear-gradient(135deg, ${colorStyle.base}, ${colorStyle.accent})`;
 
-        // Standard zurücksetzen
         slidingOverlayEl.style.opacity = "0";
         slidingLeftEl.style.opacity = "0";
         slidingRightEl.style.opacity = "0";
@@ -639,32 +728,27 @@
         ledStripEl.style.boxShadow = "0 0 0 rgba(56, 189, 248, 0.0)";
         premiumGlowEl.style.boxShadow = "0 0 35px rgba(245, 158, 11, 0.0)";
         cornerSideEl.style.opacity = "0";
-
-        // Türen sichtbar für Standard
         doorLeftEl.style.opacity = "1";
         doorRightEl.style.opacity = "1";
 
-        let metaText = "Darstellung angepasst an Typ, Maße und Farbe. Extras wie Spiegel oder LED werden optisch hervorgehoben.";
+        let metaText = "Darstellung richtet sich nach Typ, ungefähren Maßen und Farbe. Extras wie Spiegel oder LED‑Licht werden optisch hervorgehoben.";
 
-        // Typ-spezifische Darstellung
         const type = wardrobeTypeEl.value;
         if (type === "sliding") {
             slidingOverlayEl.style.opacity = "1";
             slidingLeftEl.style.opacity = "1";
             slidingRightEl.style.opacity = "1";
-            // klassische Türen etwas zurücknehmen
             doorLeftEl.style.opacity = "0.2";
             doorRightEl.style.opacity = "0.2";
-            metaText = "Schrank mit Schiebetüren – gut für kleine Räume, da beim Öffnen keine Türen in den Raum ragen.";
+            metaText = "Schrank mit Schiebetüren – ideal, wenn Türen keinen zusätzlichen Platz im Raum einnehmen sollen.";
         } else if (type === "corner") {
             cornerSideEl.style.opacity = "1";
-            metaText = "Eckkleiderschrank – ideal, um Raumecken effizient zu nutzen.";
+            metaText = "Eckkleiderschrank – nutzt Raumecken effizient und ist gut für Zimmer mit wenig Stellfläche geeignet.";
         } else if (type === "premium") {
             premiumGlowEl.style.boxShadow = "0 0 35px rgba(245, 158, 11, 0.45)";
-            metaText = "Premium-Schrank – großzügig, modern und mit vielen Ausstattungsoptionen.";
+            metaText = "Premium‑Schrank – großzügige Maße und viele Ausstattungsoptionen für maximalen Stauraum.";
         }
 
-        // Extras
         const extras = extrasEl.value;
         if (extras.includes("Spiegeltüren")) {
             mirrorStripeEl.style.opacity = "0.9";
@@ -673,7 +757,7 @@
         if (extras.includes("LED")) {
             ledStripEl.style.background = "rgba(56, 189, 248, 0.8)";
             ledStripEl.style.boxShadow = "0 0 14px rgba(56, 189, 248, 0.9)";
-            metaText += " LED‑Beleuchtung sorgt für bessere Sicht im Schrank.";
+            metaText += " LED‑Beleuchtung sorgt für gute Sicht im Schrank.";
         }
 
         previewMetaEl.textContent = metaText;
@@ -706,11 +790,9 @@
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    // Konfiguration aus Beschreibung setzen (Kundenwünsche)
     function applyConfigFromDescription(text) {
         const t = text.toLowerCase();
 
-        // Zimmergröße / Platz
         if (t.includes("kleines zimmer") || t.includes("wenig platz") || t.includes("schmales zimmer")) {
             wardrobeTypeEl.value = "sliding";
             widthEl.value = 150;
@@ -727,12 +809,10 @@
             heightEl.value = 240;
         }
 
-        // Ecke / Ecklösung
         if (t.includes("ecke") || t.includes("ecklösung") || t.includes("eckschrank")) {
             wardrobeTypeEl.value = "corner";
         }
 
-        // Nutzung / Kleidung
         if (t.includes("business") || t.includes("hemden") || t.includes("anzüge") || t.includes("anzuege")) {
             interiorEl.value = "Viel Hängefläche";
         }
@@ -745,7 +825,6 @@
             interiorEl.value = "Mix aus Fächern & Schubladen";
         }
 
-        // Farbe / Stil
         if (t.includes("hell") && !t.includes("holz")) {
             colorEl.value = "weiß matt";
         }
@@ -759,7 +838,6 @@
             colorEl.value = "grau";
         }
 
-        // Extras
         if (t.includes("spiegel") || t.includes("spiegeltüren") || t.includes("spiegeltueren")) {
             extrasEl.value = "Spiegeltüren";
         } else if (t.includes("kein spiegel") || t.includes("ohne spiegel")) {
@@ -774,7 +852,6 @@
             extrasEl.value = "Schubladen mit Softclose";
         }
 
-        // Größe explizit
         const widthMatch = t.match(/(\d{2,3})\s*(cm|zentimeter)\s*(breit|weite|breite)?/);
         if (widthMatch) {
             widthEl.value = Math.min(400, Math.max(80, parseInt(widthMatch[1], 10)));
@@ -792,30 +869,31 @@
     function getBotReply(userText) {
         const t = userText.toLowerCase();
 
-        // reine Beratungsfragen
         if (t.includes("kleines schlafzimmer") || t.includes("kleines zimmer")) {
-            return "Für ein kleines Schlafzimmer empfehle ich einen Schrank mit Schiebetüren in heller Farbe, z.B. weiß. So sparst du Platz und der Raum wirkt größer. Ich habe dir eine passende Basis-Konfiguration eingestellt.";
+            applyConfigFromDescription(userText);
+            return "Für ein kleines Schlafzimmer eignet sich ein Schrank mit Schiebetüren in heller Farbe. Ich habe dir eine platzsparende Konfiguration eingestellt, die den Raum größer wirken lässt.";
         }
 
         if (t.includes("viel stauraum") || t.includes("viel platz")) {
-            return "Für maximalen Stauraum eignet sich ein breiter, höherer Schrank mit einem Mix aus Fächern, Hängefläche und Schubladen. Ich habe Breite und Innenausstattung entsprechend angepasst.";
+            applyConfigFromDescription(userText);
+            return "Für maximalen Stauraum sind eine größere Breite und ein Mix aus Hängefläche, Fächern und Schubladen sinnvoll. Die Konfiguration wurde entsprechend angepasst.";
         }
 
         if (t.includes("business") || t.includes("hemden") || t.includes("anzug")) {
-            return "Wenn du viele Business-Hemden oder Anzüge hast, ist viel Hängefläche wichtig und LED-Licht praktisch. Ich habe dir einen Schrank mit viel Hängefläche vorgeschlagen.";
+            applyConfigFromDescription(userText);
+            return "Bei vielen Business‑Hemden und Anzügen ist viel Hängefläche wichtig, damit nichts verknittert. Ich habe dir eine Lösung mit Fokus auf Hängezonen eingestellt.";
         }
 
         if (t.includes("farbe") || t.includes("welche farbe") || t.includes("raum größer") || t.includes("raum groesser")) {
-            return "Helle Farben wie Weiß oder helle Eiche lassen den Raum größer wirken. Dunkle Hölzer wirken gemütlich und edel, aber können kleine Räume etwas verkleinern.";
+            return "Helle Farben wie Weiß oder helle Eiche lassen den Raum größer wirken. Dunkle Hölzer wirken gemütlich und hochwertig, können kleine Räume aber etwas kleiner erscheinen lassen.";
         }
 
-        // Standardfall: Konfiguration anwenden
         applyConfigFromDescription(userText);
         const summary = configSummaryEl.textContent;
 
-        return "Basierend auf deiner Beschreibung habe ich diese Konfiguration für dich eingestellt:\n\n" +
+        return "Auf Basis deiner Beschreibung habe ich eine passende Konfiguration eingestellt:\n\n" +
                summary +
-               "\n\nDu kannst die Werte oben im Konfigurator visuell überprüfen und bei Bedarf noch fein anpassen.";
+               "\n\nDu kannst Details im Konfigurator links prüfen und bei Bedarf weiter verfeinern.";
     }
 
     function handleSend() {
@@ -844,4 +922,5 @@
 </script>
 </body>
 </html>
+
 
