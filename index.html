@@ -2,23 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test Deployment</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f0f0f0; text-align: center; padding: 50px; }
-        h1 { color: #333; }
-    </style>
-</head>
-<body>
-    <h1>Deployment "Wuhuuuuuu :) "erfolgreich!</h1>
-    <p>Diese Testseite wurde über GitHub Actions deployed.</p>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8" />
-    <title>Mein Produkt – KI Assistent</title>
+    <title>Kleiderschrank Konfigurator – KI Assistent</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
         body {
@@ -46,7 +30,7 @@
         }
 
         main {
-            max-width: 960px;
+            max-width: 1100px;
             margin: 2rem auto;
             padding: 0 1.5rem 3rem;
             display: grid;
@@ -70,6 +54,45 @@
         .card p {
             margin-top: 0;
             color: #9ca3af;
+        }
+
+        label {
+            display: block;
+            margin-top: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            margin-top: 0.25rem;
+            padding: 0.45rem 0.6rem;
+            border-radius: 0.6rem;
+            border: 1px solid #374151;
+            background: #020617;
+            color: #e5e7eb;
+            font-size: 0.9rem;
+        }
+
+        .config-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .config-summary {
+            margin-top: 1rem;
+            padding: 0.7rem 0.9rem;
+            border-radius: 0.7rem;
+            border: 1px dashed #4b5563;
+            font-size: 0.9rem;
+            background: #020617;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.4rem;
         }
 
         /* Chat-Widget */
@@ -178,13 +201,7 @@
             cursor: default;
         }
 
-        .hint {
-            font-size: 0.75rem;
-            color: #6b7280;
-            margin-top: 0.4rem;
-        }
-
-        @media (min-width: 900px) {
+        @media (min-width: 950px) {
             main {
                 grid-template-columns: 1.1fr 1fr;
             }
@@ -193,44 +210,108 @@
 </head>
 <body>
 <header>
-    <h1>Mein Produkt – Interaktive KI Seite</h1>
-    <p>Stelle Fragen zu meinem Produkt direkt an den integrierten Assistenten.</p>
+    <h1>Kleiderschrank Konfigurator mit KI‑Assistent</h1>
+    <p>Wähle einen von vier Kleiderschränken und lass die KI deinen Schrank mit dir zusammen planen.</p>
 </header>
 
 <main>
+    <!-- PRODUKT / KONFIGURATOR -->
     <section class="card">
-        <h2>Über mein Produkt</h2>
+        <h2>Mein Kleiderschrank‑Produkt</h2>
         <p>
-            Hier beschreibst du kurz dein Produkt: Was macht es? Für wen ist es gedacht?
-            Welche Probleme löst es? Passe diesen Text einfach im HTML an.
+            Wähle zuerst einen Schrank‑Typ, stelle Maße, Farbe und Innenleben ein – oder beschreibe deinen Wunschschrank,
+            damit der Assistent eine passende Konfiguration vorschlägt.
         </p>
-        <p>
-            Beispiel: „Dieses Tool unterstützt Studierende im Studiengang Management und
-            Digitalisierung bei Datenanalyse, Finanzthemen und Projektarbeit.“
+
+        <!-- 1. Auswahl: Schrank-Typ -->
+        <label for="wardrobeType">Schrank‑Typ auswählen</label>
+        <select id="wardrobeType">
+            <option value="basic">1) Basic Kleiderschrank</option>
+            <option value="sliding">2) Kleiderschrank mit Schiebetüren</option>
+            <option value="corner">3) Eckkleiderschrank</option>
+            <option value="premium">4) Premium Kleiderschrank</option>
+        </select>
+
+        <!-- 2. Konfiguration -->
+        <div class="config-row">
+            <div>
+                <label for="height">Höhe (cm)</label>
+                <input type="number" id="height" min="180" max="280" value="220" />
+            </div>
+            <div>
+                <label for="width">Breite (cm)</label>
+                <input type="number" id="width" min="80" max="400" value="200" />
+            </div>
+            <div>
+                <label for="depth">Tiefe (cm)</label>
+                <input type="number" id="depth" min="40" max="80" value="60" />
+            </div>
+        </div>
+
+        <div class="config-row">
+            <div>
+                <label for="color">Farbe / Dekor</label>
+                <select id="color">
+                    <option value="weiß matt">Weiß matt</option>
+                    <option value="eiche hell">Eiche hell</option>
+                    <option value="eiche dunkel">Eiche dunkel</option>
+                    <option value="grau">Betongrau</option>
+                </select>
+            </div>
+            <div>
+                <label for="interior">Innenausstattung</label>
+                <select id="interior">
+                    <option value="Basis: Kleiderstangen + Fächer">Basis: Kleiderstangen + Fächer</option>
+                    <option value="Viele Schubladen">Viele Schubladen</option>
+                    <option value="Viel Hängefläche">Viel Hängefläche</option>
+                    <option value="Mix aus Fächern & Schubladen">Mix aus Fächern & Schubladen</option>
+                </select>
+            </div>
+            <div>
+                <label for="extras">Extras</label>
+                <select id="extras">
+                    <option value="keine Extras">Keine Extras</option>
+                    <option value="Spiegeltüren">Spiegeltüren</option>
+                    <option value="LED-Beleuchtung">LED‑Beleuchtung innen</option>
+                    <option value="Schubladen mit Softclose">Softclose für Schubladen</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="config-summary" id="configSummary">
+            Aktuelle Konfiguration: Basic Kleiderschrank, 220 × 200 × 60 cm, Farbe Weiß matt,
+            Innenausstattung: Basis: Kleiderstangen + Fächer, Extras: keine Extras.
+        </div>
+
+        <p class="hint">
+            Wenn du oben Werte änderst, wird die Zusammenfassung automatisch angepasst.  
+            Die KI kann dir außerdem eine Konfiguration aus deiner Beschreibung heraus vorschlagen.
         </p>
     </section>
 
+    <!-- KI / CHAT -->
     <section class="card">
-        <h2>Produkt-KI – stelle deine Fragen</h2>
+        <h2>Schrank‑KI – beschreibe deinen Wunsch</h2>
         <p class="hint">
-            Tipp: Frage z.B. „Was kann dieses Produkt?“ oder „Wie hilft mir das im Studium?“.
+            Beispiel: „Ich brauche einen großen, hellen Schrank mit viel Platz zum Hängen, ca. 3 Meter breit,
+            mit Spiegeltüren und LED‑Licht.“
         </p>
         <div class="chat-container">
             <div class="chat-header">
                 <div class="chat-dot"></div>
                 <div>
-                    <div class="chat-title">Produkt‑Assistent (Demo‑KI)</div>
-                    <div class="chat-subtitle">Antwortet mit vordefiniertem Wissen über dein Produkt</div>
+                    <div class="chat-title">Kleiderschrank‑Assistent (Demo‑KI)</div>
+                    <div class="chat-subtitle">Versteht deine Beschreibung und setzt den Konfigurator für dich</div>
                 </div>
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="msg bot">
-                    Hi, ich bin dein Produkt‑Assistent. Stell mir eine Frage zu deinem Produkt, z.B.
-                    „Was sind die wichtigsten Features?“
+                    Hi, ich bin dein Kleiderschrank‑Assistent. Beschreibe mir, wie dein Schrank aussehen soll, oder
+                    frag z.B. „Welcher Schrank passt in ein kleines Schlafzimmer?“.
                 </div>
             </div>
             <div class="chat-input-area">
-                <input id="chatInput" type="text" placeholder="Frage zu deinem Produkt eingeben..." />
+                <input id="chatInput" type="text" placeholder="Schreib hier deine Beschreibung oder Frage..." />
                 <button id="sendBtn">Senden</button>
             </div>
         </div>
@@ -238,6 +319,48 @@
 </main>
 
 <script>
+    // --- DOM-Elemente für den Konfigurator ---
+    const wardrobeTypeEl = document.getElementById("wardrobeType");
+    const heightEl = document.getElementById("height");
+    const widthEl = document.getElementById("width");
+    const depthEl = document.getElementById("depth");
+    const colorEl = document.getElementById("color");
+    const interiorEl = document.getElementById("interior");
+    const extrasEl = document.getElementById("extras");
+    const configSummaryEl = document.getElementById("configSummary");
+
+    function getWardrobeLabel(value) {
+        switch (value) {
+            case "basic": return "Basic Kleiderschrank";
+            case "sliding": return "Kleiderschrank mit Schiebetüren";
+            case "corner": return "Eckkleiderschrank";
+            case "premium": return "Premium Kleiderschrank";
+            default: return value;
+        }
+    }
+
+    function updateSummary() {
+        const typeLabel = getWardrobeLabel(wardrobeTypeEl.value);
+        const h = heightEl.value || "?";
+        const w = widthEl.value || "?";
+        const d = depthEl.value || "?";
+        const color = colorEl.value;
+        const interior = interiorEl.value;
+        const extras = extrasEl.value;
+
+        configSummaryEl.textContent =
+            `Aktuelle Konfiguration: ${typeLabel}, ${h} × ${w} × ${d} cm, Farbe ${color}, ` +
+            `Innenausstattung: ${interior}, Extras: ${extras}.`;
+    }
+
+    [wardrobeTypeEl, heightEl, widthEl, depthEl, colorEl, interiorEl, extrasEl].forEach(el => {
+        el.addEventListener("change", updateSummary);
+        el.addEventListener("input", updateSummary);
+    });
+
+    updateSummary();
+
+    // --- Chat / KI-Logik ---
     const messagesEl = document.getElementById("chatMessages");
     const inputEl = document.getElementById("chatInput");
     const sendBtn = document.getElementById("sendBtn");
@@ -250,32 +373,95 @@
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
+    // „KI“: einfache Regeln, die auch den Konfigurator direkt setzen
+    function applyConfigFromDescription(text) {
+        const t = text.toLowerCase();
+
+        // Typ wählen
+        if (t.includes("ecke") || t.includes("eckschrank")) {
+            wardrobeTypeEl.value = "corner";
+        } else if (t.includes("schiebetür") || t.includes("schiebetueren") || t.includes("schieb")) {
+            wardrobeTypeEl.value = "sliding";
+        } else if (t.includes("premium") || t.includes("luxus")) {
+            wardrobeTypeEl.value = "premium";
+        } else if (t.includes("basic") || t.includes("einfach")) {
+            wardrobeTypeEl.value = "basic";
+        }
+
+        // Breite / Höhe grob aus Beschreibung ableiten
+        if (t.includes("klein") || t.includes("schmal")) {
+            widthEl.value = 120;
+        }
+        if (t.includes("mittel") || t.includes("normal")) {
+            widthEl.value = 200;
+        }
+        if (t.includes("groß") || t.includes("gross") || t.includes("sehr viel platz")) {
+            widthEl.value = 280;
+        }
+
+        if (t.includes("hoch")) {
+            heightEl.value = 240;
+        }
+        if (t.includes("niedrig")) {
+            heightEl.value = 200;
+        }
+
+        // Farbe
+        if (t.includes("weiß") || t.includes("weiss") || t.includes("hell")) {
+            colorEl.value = "weiß matt";
+        }
+        if (t.includes("eiche hell") || t.includes("holz hell") || (t.includes("holz") && t.includes("hell"))) {
+            colorEl.value = "eiche hell";
+        }
+        if (t.includes("eiche dunkel") || (t.includes("holz") && t.includes("dunkel"))) {
+            colorEl.value = "eiche dunkel";
+        }
+        if (t.includes("grau") || t.includes("beton")) {
+            colorEl.value = "grau";
+        }
+
+        // Innenleben
+        if (t.includes("viel hängen") || t.includes("viel haenge") || t.includes("bügel") || t.includes("buegel")) {
+            interiorEl.value = "Viel Hängefläche";
+        } else if (t.includes("schubladen")) {
+            interiorEl.value = "Viele Schubladen";
+        } else if (t.includes("mix") || t.includes("fächer") || t.includes("faecher")) {
+            interiorEl.value = "Mix aus Fächern & Schubladen";
+        }
+
+        // Extras
+        if (t.includes("spiegel") || t.includes("spiegeltüren")) {
+            extrasEl.value = "Spiegeltüren";
+        }
+        if (t.includes("licht") || t.includes("led")) {
+            extrasEl.value = "LED-Beleuchtung";
+        }
+        if (t.includes("softclose")) {
+            extrasEl.value = "Schubladen mit Softclose";
+        }
+
+        updateSummary();
+    }
+
     function getBotReply(userText) {
-        const text = userText.toLowerCase();
+        const t = userText.toLowerCase();
 
-        // Hier definierst du die „KI-Logik“ über dein Produkt:
-        if (text.includes("was kann") || text.includes("was macht")) {
-            return "Mein Produkt unterstützt dich bei Management- und Digitalisierungsaufgaben, z.B. Datenanalyse, Reporting und Strukturierung deiner Projekte.";
+        // reine Beratungsfragen, ohne Konfiguration
+        if (t.includes("kleines schlafzimmer") || t.includes("kleines zimmer")) {
+            return "Für ein kleines Schlafzimmer empfehle ich einen Schrank mit Schiebetüren und eher heller Farbe, z.B. Weiß oder helle Eiche. So sparst du Platz und der Raum wirkt größer.";
         }
 
-        if (text.includes("feature") || text.includes("funktionen") || text.includes("features")) {
-            return "Wichtige Features: übersichtliches Dashboard, einfache Dateneingabe, automatische Auswertungen und Export für Präsentationen.";
+        if (t.includes("viel stauraum") || t.includes("viel platz")) {
+            return "Wenn du maximalen Stauraum willst, nutze einen breiten, hohen Schrank mit vielen Schubladen und Fächern. Für Übersichtlichkeit ist ein Mix aus Fächern und Hängefläche ideal.";
         }
 
-        if (text.includes("studium") || text.includes("uni")) {
-            return "Im Studium hilft dir das Produkt, Projektarbeiten zu strukturieren, Kennzahlen aufzubereiten und Inhalte für Präsentationen aufzubereiten.";
-        }
+        // Standardfall: Versuche, den Schrank zu konfigurieren
+        applyConfigFromDescription(userText);
 
-        if (text.includes("preis") || text.includes("kosten")) {
-            return "Die Demo-Version ist kostenlos. Für ein reales Produkt könntest du hier deine Preismodelle erklären.";
-        }
-
-        if (text.includes("kontakt") || text.includes("support")) {
-            return "Für Support kannst du mich direkt kontaktieren – hier würdest du normalerweise deine E-Mail oder LinkedIn angeben.";
-        }
-
-        // Standardantwort
-        return "Gute Frage! Diese Demo-KI ist noch einfach. Formuliere deine Frage konkret zu Funktionen, Nutzen im Studium oder Preis – oder passe den Code an deine eigenen Antworten an.";
+        const summary = configSummaryEl.textContent;
+        return "Basierend auf deiner Beschreibung habe ich diese Konfiguration für dich eingestellt:\n\n" +
+               summary +
+               "\n\nDu kannst die Werte oben im Konfigurator bei Bedarf noch manuell anpassen.";
     }
 
     function handleSend() {
