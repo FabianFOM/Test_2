@@ -1,739 +1,693 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FOM Lernplattform</title>
-
-<style>
-:root {
-    --fom-blue: #003A8F;
-    --fom-light: #f4f7fb;
-    --fom-accent: #007bff;
-    --fom-accent-soft: rgba(0, 123, 255, 0.1);
-    --fom-danger: #e63946;
-    --card-bg: #ffffff;
-    --text-main: #1f2933;
-}
-
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    margin: 0;
-    background: radial-gradient(circle at top left, #e0ebff, #f4f7fb);
-    color: var(--text-main);
-}
-
-/* Header / Topbar */
-header {
-    background: linear-gradient(135deg, var(--fom-blue), #001d4f);
-    color: white;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 1.8rem;
-}
-
-header p {
-    margin-top: 0.4rem;
-    opacity: 0.9;
-}
-
-/* Navigation Tabs */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    background: transparent;
-    padding: 0.75rem 1rem 0.5rem;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-nav button {
-    padding: 0.6rem 1rem;
-    border-radius: 999px;
-    border: none;
-    background: rgba(255,255,255,0.9);
-    color: var(--fom-blue);
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    transition: all 0.2s ease;
-}
-
-nav button:hover {
-    background: var(--fom-accent-soft);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-}
-
-nav button.active {
-    background: var(--fom-accent);
-    color: #fff;
-}
-
-/* Layout Container */
-.container {
-    max-width: 1100px;
-    margin: 1rem auto 2rem;
-    padding: 0 1rem;
-}
-
-/* Intro Dashboard Row */
-.dashboard-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.stat-card {
-    background: rgba(255,255,255,0.9);
-    border-radius: 16px;
-    padding: 1rem 1.1rem;
-    box-shadow: 0 10px 25px rgba(15,23,42,0.12);
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    border: 1px solid rgba(148,163,184,0.2);
-}
-
-.stat-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #6b7280;
-}
-
-.stat-value {
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-.stat-hint {
-    font-size: 0.8rem;
-    color: #6b7280;
-}
-
-/* Cards */
-.section {
-    margin-top: 1.5rem;
-}
-
-.section h2 {
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.card {
-    background: var(--card-bg);
-    padding: 1rem;
-    margin: 0.5rem 0 0.75rem;
-    border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(15,23,42,0.08);
-    border: 1px solid rgba(148,163,184,0.25);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-
-.card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 16px 30px rgba(15,23,42,0.18);
-    border-color: var(--fom-accent-soft);
-}
-
-/* Form Controls */
-input, textarea, select {
-    width: 100%;
-    padding: 0.6rem 0.7rem;
-    margin-top: 0.4rem;
-    border-radius: 10px;
-    border: 1px solid #cbd5e1;
-    font-size: 0.9rem;
-    outline: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-    background: #f9fafb;
-}
-
-input:focus, textarea:focus, select:focus {
-    border-color: var(--fom-accent);
-    box-shadow: 0 0 0 2px var(--fom-accent-soft);
-    background: #ffffff;
-}
-
-textarea {
-    min-height: 120px;
-    resize: vertical;
-}
-
-/* Buttons (general) */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    padding: 0.55rem 0.9rem;
-    border-radius: 999px;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-top: 0.6rem;
-    background: var(--fom-accent);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(37,99,235,0.45);
-    background: #0055cc;
-}
-
-.btn.secondary {
-    background: #e5e7eb;
-    color: #111827;
-    box-shadow: none;
-}
-
-.btn.secondary:hover {
-    background: #d1d5db;
-}
-
-/* Lists */
-#fileList a {
-    text-decoration: none;
-    color: var(--fom-blue);
-    font-weight: 500;
-}
-
-/* Flashcards layout */
-.flashcard-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-    gap: 0.75rem;
-}
-
-.flashcard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
-    gap: 0.75rem;
-}
-
-/* Calendar */
-.calendar-wrapper {
-    display: grid;
-    grid-template-columns: minmax(0,2fr) minmax(0,1.2fr);
-    gap: 1rem;
-}
-
-@media (max-width: 800px) {
-    .calendar-wrapper {
-        grid-template-columns: 1fr;
+  <meta charset="UTF-8">
+  <title>Lernplattform – Skripte, Notizen & Tests</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-}
-
-.calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.6rem;
-}
-
-.calendar-header h3 {
-    margin: 0;
-}
-
-.calendar-header button {
-    padding: 0.25rem 0.5rem;
-    border-radius: 999px;
-    border: none;
-    background: #e5e7eb;
-    cursor: pointer;
-    font-size: 0.85rem;
-}
-
-.calendar-header button:hover {
-    background: #d1d5db;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.3rem;
-    font-size: 0.8rem;
-}
-
-.calendar-day-name {
-    text-align: center;
-    font-weight: 600;
-    color: #6b7280;
-    padding-bottom: 0.25rem;
-}
-
-.calendar-cell {
-    height: 70px;
-    border-radius: 10px;
-    padding: 0.3rem 0.35rem;
-    position: relative;
-    background: #f9fafb;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
-}
-
-.calendar-cell:hover {
-    background: #eff6ff;
-    border-color: var(--fom-accent-soft);
-    transform: translateY(-1px);
-}
-
-.calendar-cell.inactive {
-    opacity: 0.35;
-    cursor: default;
-}
-
-.calendar-cell .date-number {
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.calendar-cell.today {
-    border-color: var(--fom-accent);
-    background: #eff6ff;
-}
-
-.calendar-cell.has-event::after {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: var(--fom-accent);
-    position: absolute;
-    bottom: 4px;
-    right: 6px;
-}
-
-/* Dark Mode */
-.dark {
-    background: radial-gradient(circle at top, #020617, #020617);
-    color: #e5e7eb;
-}
-
-.dark header {
-    background: linear-gradient(135deg, #020617, #020617);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-}
-
-.dark nav button {
-    background: #020617;
-    color: #e5e7eb;
-    box-shadow: 0 4px 12px rgba(15,23,42,0.8);
-}
-
-.dark nav button.active {
-    background: var(--fom-accent);
-    color: #fff;
-}
-
-.dark .stat-card,
-.dark .card {
-    background: #020617;
-    border-color: rgba(51,65,85,0.9);
-    box-shadow: 0 18px 40px rgba(0,0,0,0.9);
-}
-
-.dark input,
-.dark textarea,
-.dark select {
-    background: #020617;
-    color: #e5e7eb;
-    border-color: #374151;
-}
-
-.dark .calendar-cell {
-    background: #020617;
-    border-color: #111827;
-}
-
-.dark .calendar-cell.today {
-    background: #111827;
-}
-
-.dark #fileList a {
-    color: #93c5fd;
-}
-</style>
+    body {
+      background: #f4f5f7;
+      color: #222;
+    }
+    .header {
+      background: #111827;
+      color: #f9fafb;
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 1.5rem auto 2rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+    }
+    .card h2 {
+      margin-bottom: 0.75rem;
+    }
+    label {
+      display: block;
+      margin-top: 0.75rem;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+    input[type="text"],
+    input[type="file"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 0.95rem;
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      margin-top: 0.9rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      border: none;
+      background: #2563eb;
+      color: #f9fafb;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.15s ease;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    button:disabled {
+      background: #9ca3af;
+      cursor: default;
+    }
+    .hint,
+    .small {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .script-list {
+      list-style: none;
+    }
+    .script-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.25rem;
+      border-bottom: 1px solid #e5e7eb;
+      gap: 0.5rem;
+    }
+    .script-main {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+    }
+    .script-title {
+      font-weight: 500;
+    }
+    .script-meta {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .script-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .script-actions button {
+      margin-top: 0;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.8rem;
+    }
+    .detail-section {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .answer-box {
+      margin-top: 0.5rem;
+      padding: 0.7rem;
+      border-radius: 6px;
+      background: #eff6ff;
+      font-size: 0.9rem;
+      min-height: 2rem;
+    }
+    .test-container {
+      margin-top: 0.75rem;
+    }
+    .question-block {
+      margin-bottom: 0.9rem;
+      padding: 0.7rem;
+      border-radius: 6px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+    .question-text {
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+    .option {
+      display: block;
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+    .test-result {
+      margin-top: 0.75rem;
+      font-weight: 600;
+    }
+    #notesStatus {
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      color: #16a34a;
+    }
+    .footer {
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .hidden {
+      display: none;
+    }
+    .notes-sort-bar {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .notes-sort-bar select {
+      width: auto;
+      min-width: 140px;
+    }
+    @media (min-width: 900px) {
+      .container {
+        grid-template-columns: 1.1fr 1.1fr;
+        grid-template-areas:
+          "upload detail"
+          "list detail";
+      }
+      .container > .card:nth-child(1) {
+        grid-area: upload;
+      }
+      .container > .card:nth-child(2) {
+        grid-area: list;
+      }
+      #scriptDetailCard {
+        grid-area: detail;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <header class="header">
+    <h1>Lernplattform</h1>
+    <p>PDF-Skripte hochladen, Fragen stellen, Notizen machen und Tests generieren.</p>
+  </header>
 
-<header>
-    <h1>📘 FOM Lernplattform</h1>
-    <p>Dein persönliches KI-Lernsystem – Skripte, Notizen, Lernkarten & Kalender an einem Ort</p>
-</header>
+  <main class="container">
+    <!-- Bereich: Neues Skript anlegen -->
+    <section class="card">
+      <h2>Neues Skript anlegen</h2>
+      <form id="uploadForm">
+        <label for="scriptTitle">Titel des Skripts</label>
+        <input type="text" id="scriptTitle" required placeholder="z.B. Statistik Vorlesung SS26">
 
-<nav>
-    <button id="tab-scripts" onclick="showTab('scripts')">📁 Skripte</button>
-    <button id="tab-notes" onclick="showTab('notes')">📝 Notizen</button>
-    <button id="tab-flashcards" onclick="showTab('flashcards')">🧠 Lernkarten</button>
-    <button id="tab-calendar" onclick="showTab('calendar')">📅 Kalender</button>
-    <button onclick="toggleDarkMode()">🌙</button>
-</nav>
+        <label for="scriptDate">Datum</label>
+        <input type="date" id="scriptDate" required>
 
-<div class="container">
+        <label for="scriptTime">Uhrzeit</label>
+        <input type="time" id="scriptTime" required>
 
-    <!-- Kleine Dashboard-Karten -->
-    <div class="dashboard-row">
-        <div class="stat-card">
-            <div class="stat-label">Skripte</div>
-            <div class="stat-value" id="stat-files">0</div>
-            <div class="stat-hint">Übersicht deiner hochgeladenen Dokumente</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Notizen</div>
-            <div class="stat-value" id="stat-notes">0</div>
-            <div class="stat-hint">Kurzinfos und Zusammenfassungen</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Lernkarten</div>
-            <div class="stat-value" id="stat-cards">0</div>
-            <div class="stat-hint">Perfekt für Wiederholungen vor der Klausur</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Kalender-Einträge</div>
-            <div class="stat-value" id="stat-events">0</div>
-            <div class="stat-hint">Klausuren, Abgaben & Lernblöcke</div>
-        </div>
-    </div>
+        <label for="pdfFile">PDF-Datei</label>
+        <input type="file" id="pdfFile" accept="application/pdf" required>
 
-    <!-- Skripte -->
-    <div id="scripts" class="section">
-        <h2>📁 Skripte hochladen</h2>
-        <div class="card">
-            <label for="fileInput">Datei auswählen (z.B. PDF, PPT, DOCX):</label>
-            <input type="file" id="fileInput">
-            <button class="btn" onclick="saveFile()">💾 Speichern</button>
-        </div>
-        <div id="fileList"></div>
-    </div>
+        <button type="submit">Skript anlegen</button>
+      </form>
+      <p class="hint">
+        Hinweis: PDFs und Notizen werden nur lokal im Browser (localStorage) gespeichert,
+        nicht auf einem Server.[web:17][web:20]
+      </p>
+    </section>
 
-    <!-- Notizen -->
-    <div id="notes" class="section" style="display:none">
-        <h2>📝 Notizen</h2>
-        <div class="card">
-            <label for="noteInput">Neue Notiz:</label>
-            <textarea id="noteInput" placeholder="Deine Notizen..."></textarea>
-            <button class="btn" onclick="saveNote()">💾 Speichern</button>
-        </div>
-        <div id="notesList"></div>
-    </div>
+    <!-- Bereich: Liste aller Skripte -->
+    <section class="card">
+      <h2>Meine Skripte</h2>
 
-    <!-- Flashcards -->
-    <div id="flashcards" class="section" style="display:none">
-        <h2>🧠 Lernkarten</h2>
-        <div class="card">
-            <div class="flashcard-form">
-                <div>
-                    <label for="question">Frage</label>
-                    <input id="question" placeholder="z.B. Was ist die Kapitalwertmethode?">
-                </div>
-                <div>
-                    <label for="answer">Antwort</label>
-                    <input id="answer" placeholder="Kurz und prägnant antworten...">
-                </div>
-            </div>
-            <button class="btn" onclick="addFlashcard()">➕ Lernkarte hinzufügen</button>
-        </div>
-        <div id="flashcardList" class="flashcard-grid"></div>
-    </div>
+      <div class="notes-sort-bar">
+        <span>Skripte sortieren nach:</span>
+        <select id="sortSelect">
+          <option value="created_desc">Neueste zuerst</option>
+          <option value="created_asc">Älteste zuerst</option>
+          <option value="date_time_asc">Datum/Uhrzeit aufsteigend</option>
+          <option value="date_time_desc">Datum/Uhrzeit absteigend</option>
+          <option value="title_asc">Titel A-Z</option>
+          <option value="title_desc">Titel Z-A</option>
+        </select>
+      </div>
 
-    <!-- Kalender -->
-    <div id="calendar" class="section" style="display:none">
-        <h2>📅 Kalender</h2>
-        <div class="calendar-wrapper">
-            <div class="card">
-                <div class="calendar-header">
-                    <button onclick="changeMonth(-1)">◀</button>
-                    <h3 id="monthLabel"></h3>
-                    <button onclick="changeMonth(1)">▶</button>
-                </div>
-                <div class="calendar-grid" id="weekdayRow"></div>
-                <div class="calendar-grid" id="calendarGrid"></div>
-            </div>
-            <div class="card">
-                <h3>📌 Termin hinzufügen</h3>
-                <label for="eventDate">Datum</label>
-                <input type="date" id="eventDate">
-                <label for="eventTitle">Titel</label>
-                <input type="text" id="eventTitle" placeholder="z.B. Klausur BWL, Abgabe Hausarbeit">
-                <button class="btn" onclick="addEvent()">💾 Termin speichern</button>
-                <div style="margin-top:0.8rem;">
-                    <h4>Geplante Termine</h4>
-                    <ul id="eventList" style="list-style:none; padding-left:0; margin-top:0.4rem; font-size:0.9rem;"></ul>
-                </div>
-            </div>
-        </div>
-    </div>
+      <ul id="scriptList" class="script-list">
+        <!-- wird per JavaScript gefüllt -->
+      </ul>
+    </section>
 
-</div>
+    <!-- Detailbereich: Ausgewähltes Skript -->
+    <section id="scriptDetailCard" class="card hidden">
+      <h2 id="detailTitle">Skript-Ordner</h2>
 
-<script>
-// Tab Navigation
-function showTab(tab) {
-    const sections = ['scripts', 'notes', 'flashcards', 'calendar'];
-    sections.forEach(id => {
-        document.getElementById(id).style.display = (id === tab) ? 'block' : 'none';
-    });
+      <!-- Skript-Metadaten -->
+      <div class="detail-section">
+        <h3>Infos</h3>
+        <p class="small" id="detailMeta"></p>
+      </div>
 
-    const buttons = ['tab-scripts', 'tab-notes', 'tab-flashcards', 'tab-calendar'];
-    buttons.forEach(id => {
-        document.getElementById(id).classList.remove('active');
-    });
+      <!-- Zugriff auf das Skript -->
+      <div class="detail-section">
+        <h3>PDF</h3>
+        <button id="openPdfBtn">PDF anzeigen</button>
+        <p class="small">Das PDF wird in einem neuen Tab geöffnet.[web:13]</p>
+      </div>
 
-    const tabButtonId = 'tab-' + tab;
-    const btn = document.getElementById(tabButtonId);
-    if (btn) btn.classList.add('active');
-}
+      <!-- Notizenbereich -->
+      <div class="detail-section">
+        <h3>Notizen zu diesem Skript</h3>
+        <textarea id="notesInput" rows="5"
+          placeholder="Schreibe hier deine Notizen zu diesem Skript..."></textarea>
+        <button id="saveNotesBtn">Notizen speichern</button>
+        <p class="small" id="notesStatus"></p>
+      </div>
 
-// FILES
-function saveFile() {
-    const file = document.getElementById('fileInput').files[0];
-    if (!file) return;
+      <!-- KI-Fragenbereich (Fake-KI) -->
+      <div class="detail-section">
+        <h3>Fragen an die KI (Demo)</h3>
+        <textarea id="questionInput" rows="3"
+          placeholder="Stelle eine Frage zu diesem Skript..."></textarea>
+        <button id="askBtn">Frage stellen</button>
+        <div id="answerBox" class="answer-box"></div>
+      </div>
 
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        let files = JSON.parse(localStorage.getItem('files') || '[]');
-        files.push({name: file.name, data: e.target.result});
-        localStorage.setItem('files', JSON.stringify(files));
-        displayFiles();
-        updateStats();
-    };
-    reader.readAsDataURL(file);
-}
+      <!-- Testbereich -->
+      <div class="detail-section">
+        <h3>Test (Multiple Choice)</h3>
+        <button id="generateTestBtn">Test automatisch generieren</button>
+        <div id="testContainer" class="test-container"></div>
+        <button id="checkTestBtn" class="hidden">Test auswerten</button>
+        <p id="testResult" class="test-result"></p>
+      </div>
+    </section>
+  </main>
 
-function displayFiles() {
-    let files = JSON.parse(localStorage.getItem('files') || '[]');
-    let list = document.getElementById('fileList');
-    list.innerHTML = '';
+  <footer class="footer">
+    <p>Uni-Projekt · GitHub Pages (statische Website)</p>
+  </footer>
 
-    files.forEach(f => {
-        let el = document.createElement('div');
-        el.className = 'card';
-        el.innerHTML = `<a href="${f.data}" download="${f.name}">📄 ${f.name}</a>`;
-        list.appendChild(el);
-    });
-}
+  <script>
+    // ---- Datenmodell ----
+    const STORAGE_KEY = "lernplattform_scripts_v2";
 
-// NOTES
-function saveNote() {
-    let note = document.getElementById('noteInput').value.trim();
-    if (!note) return;
+    // Script: { id, title, pdfDataUrl, previewText, date, time, notes, createdAt }
 
-    let notes = JSON.parse(localStorage.getItem('notes') || '[]');
-    notes.push(note);
-    localStorage.setItem('notes', JSON.stringify(notes));
-    document.getElementById('noteInput').value = '';
-    displayNotes();
-    updateStats();
-}
+    let scripts = loadScripts();
+    let currentScriptId = null;
+    let currentSortMode = "created_desc";
 
-function displayNotes() {
-    let notes = JSON.parse(localStorage.getItem('notes') || '[]');
-    let list = document.getElementById('notesList');
-    list.innerHTML = '';
-    notes.forEach((n, idx) => {
-        let el = document.createElement('div');
-        el.className = 'card';
-        el.textContent = n;
-        list.appendChild(el);
-    });
-}
-
-// FLASHCARDS
-function addFlashcard() {
-    let q = document.getElementById('question').value.trim();
-    let a = document.getElementById('answer').value.trim();
-    if (!q || !a) return;
-
-    let cards = JSON.parse(localStorage.getItem('cards') || '[]');
-    cards.push({q, a});
-    localStorage.setItem('cards', JSON.stringify(cards));
-    document.getElementById('question').value = '';
-    document.getElementById('answer').value = '';
-    displayCards();
-    updateStats();
-}
-
-function displayCards() {
-    let cards = JSON.parse(localStorage.getItem('cards') || '[]');
-    let list = document.getElementById('flashcardList');
-    list.innerHTML = '';
-
-    cards.forEach(c => {
-        let el = document.createElement('div');
-        el.className = 'card';
-        el.innerHTML = `<strong>${c.q}</strong><br>${c.a}`;
-        list.appendChild(el);
-    });
-}
-
-// DARK MODE
-function toggleDarkMode() {
-    document.body.classList.toggle('dark');
-}
-
-// KALENDER
-const monthNames = [
-    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-    'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
-];
-const weekdayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
-
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
-
-function initWeekdays() {
-    const row = document.getElementById('weekdayRow');
-    row.innerHTML = '';
-    weekdayNames.forEach(d => {
-        const div = document.createElement('div');
-        div.className = 'calendar-day-name';
-        div.textContent = d;
-        row.appendChild(div);
-    });
-}
-
-function renderCalendar() {
-    const firstDay = new Date(currentYear, currentMonth, 1);
-    const startingDay = (firstDay.getDay() + 6) % 7; // Montag = 0
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const daysPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
-
-    const grid = document.getElementById('calendarGrid');
-    grid.innerHTML = '';
-
-    document.getElementById('monthLabel').textContent =
-        `${monthNames[currentMonth]} ${currentYear}`;
-
-    let events = JSON.parse(localStorage.getItem('events') || '[]');
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-
-    // Tage aus Vormonat
-    for (let i = 0; i < startingDay; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'calendar-cell inactive';
-        cell.innerHTML = `<div class="date-number">${daysPrevMonth - startingDay + 1 + i}</div>`;
-        grid.appendChild(cell);
+    function loadScripts() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return [];
+      }
     }
 
-    // Tage im aktuellen Monat
-    for (let d = 1; d <= daysInMonth; d++) {
-        const cell = document.createElement('div');
-        cell.className = 'calendar-cell';
-        const dateObj = new Date(currentYear, currentMonth, d);
-        const iso = dateObj.toISOString().split('T')[0];
+    function saveScripts() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(scripts));
+    }
 
-        const hasEvent = events.some(ev => ev.date === iso);
-        if (hasEvent) cell.classList.add('has-event');
+    // ---- DOM-Elemente ----
+    const uploadForm = document.getElementById("uploadForm");
+    const scriptList = document.getElementById("scriptList");
+    const scriptDetailCard = document.getElementById("scriptDetailCard");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailMeta = document.getElementById("detailMeta");
+    const openPdfBtn = document.getElementById("openPdfBtn");
 
-        if (iso === todayStr) cell.classList.add('today');
+    const notesInput = document.getElementById("notesInput");
+    const saveNotesBtn = document.getElementById("saveNotesBtn");
+    const notesStatus = document.getElementById("notesStatus");
 
-        cell.innerHTML = `<div class="date-number">${d}</div>`;
-        cell.onclick = () => {
-            document.getElementById('eventDate').value = iso;
+    const questionInput = document.getElementById("questionInput");
+    const askBtn = document.getElementById("askBtn");
+    const answerBox = document.getElementById("answerBox");
+
+    const generateTestBtn = document.getElementById("generateTestBtn");
+    const testContainer = document.getElementById("testContainer");
+    const checkTestBtn = document.getElementById("checkTestBtn");
+    const testResult = document.getElementById("testResult");
+
+    const sortSelect = document.getElementById("sortSelect");
+
+    // ---- Helper: Sortierung ----
+    function sortScripts() {
+      scripts.sort((a, b) => {
+        const titleA = (a.title || "").toLowerCase();
+        const titleB = (b.title || "").toLowerCase();
+        const dtA = (a.date || "") + " " + (a.time || "");
+        const dtB = (b.date || "") + " " + (b.time || "");
+        const createdA = a.createdAt || 0;
+        const createdB = b.createdAt || 0;
+
+        switch (currentSortMode) {
+          case "title_asc":
+            return titleA.localeCompare(titleB);
+          case "title_desc":
+            return titleB.localeCompare(titleA);
+          case "date_time_asc":
+            return dtA.localeCompare(dtB);
+          case "date_time_desc":
+            return dtB.localeCompare(dtA);
+          case "created_asc":
+            return createdA - createdB;
+          case "created_desc":
+          default:
+            return createdB - createdA;
+        }
+      });
+    }
+
+    sortSelect.addEventListener("change", () => {
+      currentSortMode = sortSelect.value;
+      sortScripts();
+      renderScriptList();
+    });
+
+    // ---- Rendering ----
+    function renderScriptList() {
+      scriptList.innerHTML = "";
+      if (scripts.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "Noch keine Skripte angelegt.";
+        scriptList.appendChild(li);
+        return;
+      }
+
+      sortScripts();
+
+      scripts.forEach((s) => {
+        const li = document.createElement("li");
+        li.className = "script-item";
+
+        const mainDiv = document.createElement("div");
+        mainDiv.className = "script-main";
+
+        const titleSpan = document.createElement("span");
+        titleSpan.className = "script-title";
+        titleSpan.textContent = s.title;
+
+        const metaSpan = document.createElement("span");
+        metaSpan.className = "script-meta";
+
+        let dtText = "";
+        if (s.date && s.time) {
+          dtText = `${s.date} · ${s.time} Uhr`;
+        } else if (s.date) {
+          dtText = s.date;
+        }
+
+        const notesShort = (s.notes || "").trim();
+        const notesInfo = notesShort
+          ? " | Notizen vorhanden"
+          : " | Noch keine Notizen";
+
+        metaSpan.textContent = dtText ? dtText + notesInfo : notesInfo;
+
+        mainDiv.appendChild(titleSpan);
+        mainDiv.appendChild(metaSpan);
+
+        const actionsDiv = document.createElement("div");
+        actionsDiv.className = "script-actions";
+
+        const openBtn = document.createElement("button");
+        openBtn.textContent = "Ordner öffnen";
+        openBtn.addEventListener("click", () => selectScript(s.id));
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Löschen";
+        deleteBtn.style.background = "#dc2626";
+        deleteBtn.addEventListener("click", () => deleteScript(s.id));
+
+        actionsDiv.appendChild(openBtn);
+        actionsDiv.appendChild(deleteBtn);
+
+        li.appendChild(mainDiv);
+        li.appendChild(actionsDiv);
+        scriptList.appendChild(li);
+      });
+    }
+
+    function selectScript(id) {
+      currentScriptId = id;
+      const script = scripts.find((s) => s.id === id);
+      if (!script) return;
+
+      detailTitle.textContent = `Skript: ${script.title}`;
+
+      const dtParts = [];
+      if (script.date) dtParts.push(script.date);
+      if (script.time) dtParts.push(script.time + " Uhr");
+      const dtText = dtParts.join(" · ");
+
+      detailMeta.textContent = dtText || "Kein Datum/Uhrzeit gesetzt.";
+
+      notesInput.value = script.notes || "";
+      notesStatus.textContent = "";
+
+      answerBox.textContent = "";
+      questionInput.value = "";
+      testContainer.innerHTML = "";
+      testResult.textContent = "";
+      checkTestBtn.classList.add("hidden");
+
+      scriptDetailCard.classList.remove("hidden");
+    }
+
+    function deleteScript(id) {
+      if (!confirm("Willst du dieses Skript wirklich löschen?")) return;
+      scripts = scripts.filter((s) => s.id !== id);
+      saveScripts();
+      renderScriptList();
+      if (currentScriptId === id) {
+        currentScriptId = null;
+        scriptDetailCard.classList.add("hidden");
+      }
+    }
+
+    // ---- Upload-Handling ----
+    uploadForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const titleInput = document.getElementById("scriptTitle");
+      const pdfInput = document.getElementById("pdfFile");
+      const dateInput = document.getElementById("scriptDate");
+      const timeInput = document.getElementById("scriptTime");
+
+      const title = titleInput.value.trim();
+      const file = pdfInput.files[0];
+      const date = dateInput.value;
+      const time = timeInput.value;
+
+      if (!title || !file || !date || !time) {
+        alert("Bitte Titel, Datum, Uhrzeit und PDF auswählen.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const pdfDataUrl = reader.result;
+
+        const newScript = {
+          id: Date.now(),
+          title,
+          pdfDataUrl,
+          previewText: `Dies ist ein Platzhalter für den Inhalt von "${title}".`,
+          date,
+          time,
+          notes: "",
+          createdAt: Date.now()
         };
 
-        grid.appendChild(cell);
-    }
+        scripts.push(newScript);
+        saveScripts();
+        renderScriptList();
+        selectScript(newScript.id);
 
-    // Auffüllen mit nächstem Monat
-    const totalCells = startingDay + daysInMonth;
-    const remaining = (Math.ceil(totalCells / 7) * 7) - totalCells;
-    for (let i = 1; i <= remaining; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'calendar-cell inactive';
-        cell.innerHTML = `<div class="date-number">${i}</div>`;
-        grid.appendChild(cell);
-    }
-}
+        uploadForm.reset();
+      };
 
-function changeMonth(delta) {
-    currentMonth += delta;
-    if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-    } else if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-    }
-    renderCalendar();
-}
-
-function addEvent() {
-    const date = document.getElementById('eventDate').value;
-    const title = document.getElementById('eventTitle').value.trim();
-    if (!date || !title) return;
-
-    let events = JSON.parse(localStorage.getItem('events') || '[]');
-    events.push({date, title});
-    localStorage.setItem('events', JSON.stringify(events));
-
-    document.getElementById('eventTitle').value = '';
-    renderCalendar();
-    displayEvents();
-    updateStats();
-}
-
-function displayEvents() {
-    let events = JSON.parse(localStorage.getItem('events') || '[]');
-    events.sort((a,b) => a.date.localeCompare(b.date));
-    const list = document.getElementById('eventList');
-    list.innerHTML = '';
-
-    events.forEach(ev => {
-        const li = document.createElement('li');
-        const dateFormatted = ev.date.split('-').reverse().join('.');
-        li.textContent = `${dateFormatted} – ${ev.title}`;
-        list.appendChild(li);
+      reader.readAsDataURL(file);
     });
-}
 
-// Dashboard-Statistiken aktualisieren
-function updateStats() {
-    const files = JSON.parse(localStorage.getItem('files') || '[]');
-    const notes = JSON.parse(localStorage.getItem('notes') || '[]');
-    const cards = JSON.parse(localStorage.getItem('cards') || '[]');
-    const events = JSON.parse(localStorage.getItem('events') || '[]');
+    // ---- PDF öffnen ----
+    openPdfBtn.addEventListener("click", () => {
+      if (!currentScriptId) return;
+      const script = scripts.find((s) => s.id === currentScriptId);
+      if (!script || !script.pdfDataUrl) return;
+      window.open(script.pdfDataUrl, "_blank"); // neues Tab mit PDF[web:13]
+    });
 
-    document.getElementById('stat-files').textContent = files.length;
-    document.getElementById('stat-notes').textContent = notes.length;
-    document.getElementById('stat-cards').textContent = cards.length;
-    document.getElementById('stat-events').textContent = events.length;
-}
+    // ---- Notizen speichern ----
+    saveNotesBtn.addEventListener("click", () => {
+      if (!currentScriptId) return;
+      const script = scripts.find((s) => s.id === currentScriptId);
+      if (!script) return;
 
-// INIT
-displayFiles();
-displayNotes();
-displayCards();
-initWeekdays();
-renderCalendar();
-displayEvents();
-updateStats();
-showTab('scripts');
-</script>
+      script.notes = notesInput.value;
+      saveScripts();
+      sortScripts();
+      renderScriptList();
 
+      const now = new Date();
+      const timeString = now.toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      notesStatus.textContent = `Gespeichert um ${timeString}.`;
+      setTimeout(() => {
+        notesStatus.textContent = "";
+      }, 3000);
+    });
+
+    // ---- Fake-KI für Fragen ----
+    askBtn.addEventListener("click", () => {
+      if (!currentScriptId) return;
+
+      const question = questionInput.value.trim();
+      if (!question) {
+        alert("Bitte eine Frage eingeben.");
+        return;
+      }
+
+      const script = scripts.find((s) => s.id === currentScriptId);
+
+      answerBox.textContent = "Die KI denkt nach...";
+      askBtn.disabled = true;
+
+      setTimeout(() => {
+        const response =
+          `Dies ist eine simulierte KI-Antwort zu deiner Frage: "${question}". ` +
+          `Nutze das Skript "${script.title}", um dir Definitionen und Beispiele genauer anzusehen.`;
+
+        answerBox.textContent = response;
+        askBtn.disabled = false;
+      }, 700);
+    });
+
+    // ---- Testgeneration (Fake-KI) ----
+    generateTestBtn.addEventListener("click", () => {
+      if (!currentScriptId) return;
+      const script = scripts.find((s) => s.id === currentScriptId);
+      const questions = buildFakeQuestions(script);
+      renderTest(questions);
+      testResult.textContent = "";
+    });
+
+    function buildFakeQuestions(script) {
+      return [
+        {
+          text: `Worum geht es hauptsächlich im Skript "${script.title}"?`,
+          options: [
+            "Um den Inhalt deines Lieblingsromans.",
+            "Um ein Thema aus deiner Vorlesung / deinem Kurs.",
+            "Um zufällige Themen ohne Zusammenhang.",
+            "Um ausschließlich Programmieraufgaben."
+          ],
+          correctIndex: 1
+        },
+        {
+          text: "Wie solltest du beim Lernen mit diesem Skript vorgehen?",
+          options: [
+            "Gar nicht lesen, nur raten.",
+            "Nur die Überschriften ansehen.",
+            "Aktiv Notizen machen und wichtige Begriffe markieren.",
+            "Nur kurz vor der Klausur in einer Nacht alles lesen."
+          ],
+          correctIndex: 2
+        },
+        {
+          text: "Was ist ein sinnvoller Einsatz dieser Plattform?",
+          options: [
+            "Skripte strukturieren, Fragen klären und automatisierte Tests nutzen.",
+            "Nur zum Hochladen von Urlaubsfotos.",
+            "Zum Versenden von Werbe-E-Mails.",
+            "Zum Speichern von sehr großen Video-Dateien."
+          ],
+          correctIndex: 0
+        }
+      ];
+    }
+
+    function renderTest(questions) {
+      testContainer.innerHTML = "";
+      checkTestBtn.classList.remove("hidden");
+
+      questions.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "question-block";
+        block.dataset.correctIndex = q.correctIndex;
+
+        const qText = document.createElement("div");
+        qText.className = "question-text";
+        qText.textContent = `${index + 1}. ${q.text}`;
+        block.appendChild(qText);
+
+        q.options.forEach((opt, optIndex) => {
+          const label = document.createElement("label");
+          label.className = "option";
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q_${index}`;
+          radio.value = optIndex;
+
+          label.appendChild(radio);
+          label.append(` ${opt}`);
+          block.appendChild(label);
+        });
+
+        testContainer.appendChild(block);
+      });
+
+      checkTestBtn.onclick = () => evaluateTest();
+    }
+
+    function evaluateTest() {
+      const blocks = Array.from(
+        testContainer.getElementsByClassName("question-block")
+      );
+      if (blocks.length === 0) return;
+
+      let correct = 0;
+      let total = blocks.length;
+
+      blocks.forEach((block, index) => {
+        const correctIndex = Number(block.dataset.correctIndex);
+        const selected = block.querySelector(
+          `input[name="q_${index}"]:checked`
+        );
+
+        if (selected && Number(selected.value) === correctIndex) {
+          correct++;
+        }
+      });
+
+      testResult.textContent = `Du hast ${correct} von ${total} Fragen richtig beantwortet.`;
+    }
+
+    // ---- Start ----
+    sortScripts();
+    renderScriptList();
+  </script>
 </body>
 </html>
