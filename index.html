@@ -334,8 +334,7 @@
             <button id="playAudioBtn">Skript vorlesen</button>
             <button id="stopAudioBtn">Vorlesen stoppen</button>
             <p class="small">
-              Das ist eine Demo mit der Sprachausgabe des Browsers.
-              Der Text wird aus einem Platzhalter zum Skript erzeugt.
+              Demo mit der Sprachausgabe des Browsers. Der Text kommt aus einem Platzhalter.
             </p>
           </div>
 
@@ -429,7 +428,7 @@
 
           <button id="saveEventBtn">Termin speichern</button>
           <p class="small">
-            Wenn du einen Termin mit einem Skript verknüpfst, kannst du später im Kalender
+            Wenn du einen Termin mit einem Skript verknüpfst, kannst du im Kalender
             auf den Termin klicken und das Skript öffnet sich automatisch.
           </p>
 
@@ -441,35 +440,34 @@
   </main>
 
   <script>
-    // ------------------- Gemeinsame Datenstrukturen -------------------
+    // ------------------- Gemeinsame Daten -------------------
     const SCRIPT_KEY = "lernplattform_scripts_v3";
     const NOTE_KEY = "lernplattform_notes_v1";
     const EVENT_KEY = "lernplattform_events_v1";
 
-    let scripts = loadFromStorage(SCRIPT_KEY) || [];
-    let notes = loadFromStorage(NOTE_KEY) || [];
-    let events = loadFromStorage(EVENT_KEY) || [];
+    let scripts = JSON.parse(localStorage.getItem(SCRIPT_KEY) || "[]");
+    let notes = JSON.parse(localStorage.getItem(NOTE_KEY) || "[]");
+    let events = JSON.parse(localStorage.getItem(EVENT_KEY) || "[]");
 
     let currentScriptId = null;
     let currentNoteId = null;
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
-    let selectedDateStr = formatDateKey(new Date()); // yyyy-mm-dd
 
-    function loadFromStorage(key) {
-      const raw = localStorage.getItem(key);
-      if (!raw) return null;
-      try {
-        return JSON.parse(raw);
-      } catch {
-        return null;
-      }
+    const today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+    let selectedDateStr = formatDateKey(today); // yyyy-mm-dd
+
+    function saveScripts() {
+      localStorage.setItem(SCRIPT_KEY, JSON.stringify(scripts));
     }
-    function saveToStorage(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
+    function saveNotes() {
+      localStorage.setItem(NOTE_KEY, JSON.stringify(notes));
+    }
+    function saveEvents() {
+      localStorage.setItem(EVENT_KEY, JSON.stringify(events));
     }
 
-    // ------------------- Tab-Wechsel -------------------
+    // ------------------- Tabs -------------------
     const tabButtons = document.querySelectorAll(".tab-btn");
     const scriptTab = document.getElementById("scriptTab");
     const notesTab = document.getElementById("notesTab");
@@ -496,7 +494,7 @@
       calendarTab.classList.toggle("hidden", tabId !== "calendarTab");
     }
 
-    // ------------------- SKRIPT-BEREICH -------------------
+    // ------------------- Skript-Bereich -------------------
     const uploadForm = document.getElementById("uploadForm");
     const scriptList = document.getElementById("scriptList");
     const scriptDetailCard = document.getElementById("scriptDetailCard");
@@ -512,6 +510,7 @@
     const testContainer = document.getElementById("testContainer");
     const checkTestBtn = document.getElementById("checkTestBtn");
     const testResult = document.getElementById("testResult");
+    const eventScript = document.getElementById("eventScript");
 
     function renderScriptList() {
       scriptList.innerHTML = "";
@@ -538,7 +537,6 @@
 
         const metaSpan = document.createElement("span");
         metaSpan.className = "script-meta";
-
         let dtText = "";
         if (s.date) dtText += s.date;
         if (s.time) dtText += (dtText ? " · " : "") + s.time + " Uhr";
@@ -582,7 +580,6 @@
       detailMeta.textContent = parts.join(" · ") || "Kein Datum/Uhrzeit gesetzt.";
 
       scriptDetailCard.classList.remove("hidden");
-      // Reset KI/Test-Anzeige
       answerBox.textContent = "";
       questionInput.value = "";
       testContainer.innerHTML = "";
@@ -593,13 +590,13 @@
     function deleteScript(id) {
       if (!confirm("Willst du dieses Skript wirklich löschen?")) return;
       scripts = scripts.filter(s => s.id !== id);
-      saveToStorage(SCRIPT_KEY, scripts);
+      saveScripts();
       renderScriptList();
       if (currentScriptId === id) {
         currentScriptId = null;
         scriptDetailCard.classList.add("hidden");
       }
-      // Events, die dieses Skript referenzieren, könnten ggf. angepasst werden
+      // Events behalten ihre scriptId; wenn du willst, kannst du sie hier auch entfernen
     }
 
     uploadForm.addEventListener("submit", (e) => {
@@ -621,18 +618,20 @@
 
       const reader = new FileReader();
       reader.onload = () => {
-        const pdfDataUrl = reader.result;
+        const pdfDataUrl = reader.result; // sollte "data:application/pdf;base64,..." sein
+
         const newScript = {
           id: Date.now(),
           title,
           pdfDataUrl,
           date,
           time,
-          previewText: `Dies ist ein Platzhalter-Text für das Skript "${title}". Verwende das echte Skript zum Lernen.`,
+          previewText: `Dies ist ein Platzhalter-Text für das Skript "${title}". Verwende das echte PDF zum Lernen.`,
           createdAt: Date.now()
         };
+
         scripts.push(newScript);
-        saveToStorage(SCRIPT_KEY, scripts);
+        saveScripts();
         renderScriptList();
         selectScript(newScript.id);
         uploadForm.reset();
@@ -640,10 +639,15 @@
       reader.readAsDataURL(file);
     });
 
+    // PDF öffnen (fix: einfache Prüfung)
     openPdfBtn.addEventListener("click", () => {
       if (!currentScriptId) return;
       const script = scripts.find(s => s.id === currentScriptId);
-      if (!script || !script.pdfDataUrl) return;
+      if (!script || !script.pdfDataUrl) {
+        alert("Für dieses Skript ist keine PDF-Datei gespeichert.");
+        return;
+      }
+      // Öffnet die Data-URL im neuen Tab/Fenster
       window.open(script.pdfDataUrl, "_blank");
     });
 
@@ -681,7 +685,7 @@
       setTimeout(() => {
         answerBox.textContent =
           `Dies ist eine simulierte KI-Antwort zu deiner Frage: "${question}". ` +
-          `Überlege dir, wie der Inhalt von "${script.title}" diese Frage beantwortet und markiere dir die wichtigsten Stellen im Skript.`;
+          `Nutze das Skript "${script.title}", um dir passende Definitionen und Beispiele anzuschauen.`;
         askBtn.disabled = false;
       }, 700);
     });
@@ -757,7 +761,7 @@
       };
     }
 
-    // ------------------- NOTIZEN-BEREICH -------------------
+    // ------------------- Notizen -------------------
     const noteList = document.getElementById("noteList");
     const noteSortSelect = document.getElementById("noteSortSelect");
     const noteTitle = document.getElementById("noteTitle");
@@ -852,7 +856,7 @@
           note.updatedAt = now;
         }
       }
-      saveToStorage(NOTE_KEY, notes);
+      saveNotes();
       renderNotes();
       noteStatus.textContent = "Notiz gespeichert.";
       setTimeout(() => noteStatus.textContent = "", 2500);
@@ -864,7 +868,7 @@
 
     noteSortSelect.addEventListener("change", renderNotes);
 
-    // ------------------- KALENDER-BEREICH -------------------
+    // ------------------- Kalender -------------------
     const calendarTitle = document.getElementById("calendarTitle");
     const calendarBody = document.getElementById("calendarBody");
     const prevMonthBtn = document.getElementById("prevMonthBtn");
@@ -872,7 +876,6 @@
     const eventTitle = document.getElementById("eventTitle");
     const eventDate = document.getElementById("eventDate");
     const eventTime = document.getElementById("eventTime");
-    const eventScript = document.getElementById("eventScript");
     const saveEventBtn = document.getElementById("saveEventBtn");
     const eventList = document.getElementById("eventList");
 
@@ -913,7 +916,6 @@
       let dayNumber = 1;
       const totalCells = start + daysInMonth;
       const rowsNeeded = Math.ceil(totalCells / 7);
-      const today = new Date();
       const todayKey = formatDateKey(today);
 
       for (let rowIndex = 0; rowIndex < rowsNeeded; rowIndex++) {
@@ -952,7 +954,7 @@
         calendarBody.appendChild(row);
       }
 
-      // Nach Neuaufbau sicherstellen, dass Eventliste für ausgewähltes Datum angezeigt wird
+      // Nach Neuaufbau: sicherstellen, dass ein Datum gewählt ist
       eventDate.value = selectedDateStr;
       renderEventList();
     }
@@ -994,7 +996,6 @@
         div.innerHTML = `<span>${timeText}</span> – ${ev.title}${scriptText}`;
         div.addEventListener("click", () => {
           if (ev.scriptId && scripts.find(s => s.id === ev.scriptId)) {
-            currentScriptId = ev.scriptId;
             openTab("scriptTab");
             selectScript(ev.scriptId);
           }
@@ -1022,7 +1023,7 @@
         scriptId
       };
       events.push(newEvent);
-      saveToStorage(EVENT_KEY, events);
+      saveEvents();
       selectedDateStr = date;
       renderCalendar();
       eventTitle.value = "";
@@ -1034,7 +1035,6 @@
     renderScriptList();
     renderNotes();
     renderCalendar();
-    // Kalender-Standarddatum setzen
     eventDate.value = selectedDateStr;
   </script>
 </body>
