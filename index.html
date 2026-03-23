@@ -1,294 +1,199 @@
-mkdir learning-platform
-cd learning-platform
-
-mkdir server
-mkdir client
-{
-  "name": "learning-platform",
-  "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.18.2",
-    "multer": "^1.4.5-lts.1",
-    "openai": "^4.0.0",
-    "pdf-parse": "^1.1.1"
-  }
-}
-require("dotenv").config();
-
-const express = require("express");
-const cors = require("cors");
-const multer = require("multer");
-const fs = require("fs");
-const pdfParse = require("pdf-parse");
-const OpenAI = require("openai");
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Upload
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const folder = "uploads/" + file.originalname.replace(".pdf", "");
-    if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
-    cb(null, folder);
-  },
-  filename: (req, file, cb) => cb(null, "script.pdf"),
-});
-
-const upload = multer({ storage });
-
-// Upload Route
-app.post("/upload", upload.single("pdf"), (req, res) => {
-  res.json({ message: "Upload erfolgreich!" });
-});
-
-// Alle Skripte
-app.get("/scripts", (req, res) => {
-  const folders = fs.readdirSync("uploads");
-  res.json(folders);
-});
-
-// PDF lesen
-async function readPDF(folder) {
-  const buffer = fs.readFileSync(`uploads/${folder}/script.pdf`);
-  const data = await pdfParse(buffer);
-  return data.text;
-}
-
-// Frage
-app.post("/ask", async (req, res) => {
-  const { folder, question } = req.body;
-  const text = await readPDF(folder);
-
-  const response = await openai.chat.completions.create({
-    model: "gpt-4.1-mini",
-    messages: [
-      { role: "system", content: "Antwort nur aus dem Skript." },
-      { role: "user", content: text + "\n\nFrage:\n" + question },
-    ],
-  });
-
-  res.json({ answer: response.choices[0].message.content });
-});
-
-// Test (WICHTIG: JSON Format!)
-app.post("/test", async (req, res) => {
-  const { folder } = req.body;
-  const text = await readPDF(folder);
-
-  const response = await openai.chat.completions.create({
-    model: "gpt-4.1-mini",
-    messages: [
-      {
-        role: "system",
-        content: "Erstelle 5 Multiple Choice Fragen als JSON: [{frage, optionen:[], korrekt}]"
-      },
-      { role: "user", content: text },
-    ],
-  });
-
-  res.json({ test: response.choices[0].message.content });
-});
-
-app.listen(3000, () => console.log("Server läuft auf http://localhost:3000"));
-OPENAI_API_KEY=DEIN_API_KEY_HIER
-mkdir server/uploads
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Lernplattform Pro</title>
-<link rel="stylesheet" href="style.css">
-</head>
+    <meta charset="UTF-8" />
+    <title>Kleiderschrank Konfigurator – KI Assistent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root {
+            --bg: #020617;
+            --bg-card: #0b1220;
+            --border: #1f2937;
+            --accent: #3b82f6;
+            --accent-soft: #1d4ed8;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+        }
+  <meta charset="UTF-8">
+  <title>Lernplattform</title>
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
 
+        * {
+            box-sizing: border-box;
+        }
+    h1, h2 {
+      color: #333;
+    }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
+            color: var(--text-main);
+        }
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 10px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
 <body>
 
 <h1>📚 Lernplattform</h1>
 
 <div class="card">
-  <h2>Upload</h2>
-  <input type="file" id="file">
-  <button onclick="upload()">Hochladen</button>
+  <h2>📤 PDF hochladen</h2>
+  <input type="file" id="pdfFile" accept="application/pdf">
+  <button onclick="uploadPDF()">Upload</button>
+  <p id="uploadStatus"></p>
 </div>
 
 <div class="card">
-  <h2>Deine Skripte</h2>
-  <ul id="scripts"></ul>
-</div>
-
-<div class="card">
-  <h2>Frage stellen</h2>
-  <input type="text" id="question">
-  <button onclick="ask()">Fragen</button>
+  <h2>❓ Frage zum Skript</h2>
+  <textarea id="question" placeholder="Stelle eine Frage..."></textarea>
+  <button onclick="askAI()">Fragen</button>
   <pre id="answer"></pre>
 </div>
 
 <div class="card">
-  <h2>Quiz</h2>
-  <button onclick="generateQuiz()">Quiz starten</button>
-  <div id="quiz"></div>
+  <h2>🧪 Test generieren</h2>
+  <button onclick="generateTest()">Test erstellen</button>
+  <pre id="test"></pre>
 </div>
 
-<script src="script.js"></script>
-</body>
-</html>
-body {
-  font-family: Arial;
-  max-width: 900px;
-  margin: auto;
-  background: #f4f4f4;
-  padding: 20px;
+        header {
+            padding: 2.5rem 1.5rem 1.5rem;
+            text-align: center;
+            background: radial-gradient(circle at top, var(--accent-soft), #020617);
+            border-bottom: 1px solid rgba(15,23,42,0.6);
+<script>
+let pdfText = "";
+
+// 📄 PDF lesen (Frontend)
+async function uploadPDF() {
+  const file = document.getElementById("pdfFile").files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = async function() {
+    const typedarray = new Uint8Array(this.result);
+
+    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+    let text = "";
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      text += content.items.map(item => item.str).join(" ");
+    }
+
+    pdfText = text;
+    document.getElementById("uploadStatus").innerText = "✅ PDF geladen!";
+  };
+
+  reader.readAsArrayBuffer(file);
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 10px;
-}
-
-li {
-  cursor: pointer;
-  padding: 5px;
-}
-
-li:hover {
-  background: #ddd;
-}
-
-button {
-  margin-top: 10px;
-  padding: 10px;
-  width: 100%;
-}
-
-.quiz-option {
-  margin: 5px;
-  padding: 10px;
-  background: #eee;
-  cursor: pointer;
-}
-
-.correct {
-  background: green;
-  color: white;
-}
-
-.wrong {
-  background: red;
-  color: white;
-}
-let selectedFolder = "";
-
-// Skripte laden
-async function loadScripts() {
-  const res = await fetch("http://localhost:3000/scripts");
-  const data = await res.json();
-
-  const list = document.getElementById("scripts");
-  list.innerHTML = "";
-
-  data.forEach(s => {
-    const li = document.createElement("li");
-    li.innerText = s;
-    li.onclick = () => {
-      selectedFolder = s;
-      alert("Gewählt: " + s);
-    };
-    list.appendChild(li);
-  });
-}
-
-// Upload
-async function upload() {
-  const file = document.getElementById("file").files[0];
-  const formData = new FormData();
-  formData.append("pdf", file);
-
-  await fetch("http://localhost:3000/upload", {
-    method: "POST",
-    body: formData,
-  });
-
-  loadScripts();
-}
-
-// Frage
-async function ask() {
+// 🤖 Frage stellen
+async function askAI() {
   const question = document.getElementById("question").value;
 
-  const res = await fetch("http://localhost:3000/ask", {
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer DEIN_API_KEY_HIER"
+    },
     body: JSON.stringify({
-      folder: selectedFolder,
-      question
-    }),
-  });
-
-  const data = await res.json();
-  document.getElementById("answer").innerText = data.answer;
-}
-
-// Quiz
-async function generateQuiz() {
-  const res = await fetch("http://localhost:3000/test", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ folder: selectedFolder }),
-  });
-
-  const data = await res.json();
-
-  let quizData;
-  try {
-    quizData = JSON.parse(data.test);
-  } catch {
-    alert("Fehler beim Quiz – nochmal versuchen");
-    return;
-  }
-
-  const quizDiv = document.getElementById("quiz");
-  quizDiv.innerHTML = "";
-
-  quizData.forEach(q => {
-    const qDiv = document.createElement("div");
-    qDiv.innerHTML = "<b>" + q.frage + "</b>";
-
-    q.optionen.forEach(opt => {
-      const btn = document.createElement("div");
-      btn.innerText = opt;
-      btn.className = "quiz-option";
-
-      btn.onclick = () => {
-        if (opt === q.korrekt) {
-          btn.classList.add("correct");
-        } else {
-          btn.classList.add("wrong");
+      model: "gpt-4.1-mini",
+      messages: [
+        {
+          role: "system",
+          content: "Beantworte Fragen nur basierend auf dem Skript."
+        },
+        {
+          role: "user",
+          content: pdfText + "\n\nFrage:\n" + question
         }
-      };
-
-      qDiv.appendChild(btn);
-    });
-
-    quizDiv.appendChild(qDiv);
+      ]
+    })
   });
+
+        header h1 {
+            margin: 0 0 0.8rem 0;
+            font-size: 2.1rem;
+  const data = await response.json();
+  document.getElementById("answer").innerText =
+    data.choices[0].message.content;
 }
 
-loadScripts();
-cd server
-npm install
-node server.js
-cd client
-npx serve
+// 🧪 Test generieren
+async function generateTest() {
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer DEIN_API_KEY_HIER"
+    },
+    body: JSON.stringify({
+      model: "gpt-4.1-mini",
+      messages: [
+        {
+          role: "system",
+          content: "Erstelle einen Multiple Choice Test mit 5 Fragen."
+        },
+        {
+          role: "user",
+          content: pdfText
+        }
+      ]
+    })
+  });
+
+  const data = await response.json();
+  document.getElementById("test").innerText =
+    data.choices[0].message.content;
+}
+</script>
+
+<!-- PDF.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+</body>
+</html>
