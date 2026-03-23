@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Lernplattform – Skripte, Notizen & Tests</title>
+  <title>Lernplattform – Skripte, Notizen, Kalender</title>
   <style>
     * {
       box-sizing: border-box;
@@ -22,23 +22,39 @@
     }
     .header h1 {
       font-size: 1.8rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1rem auto 0;
+    }
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      border: none;
+      background: #e5e7eb;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .tab-btn.active {
+      background: #2563eb;
+      color: #f9fafb;
     }
     .container {
       max-width: 1100px;
-      margin: 1.5rem auto 2rem;
+      margin: 1rem auto 2rem;
       padding: 0 1rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
     }
     .card {
       background: #ffffff;
       border-radius: 8px;
       padding: 1.25rem 1.5rem;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+      box-shadow: 0 1px 3px rgba(15,23,42,0.1);
+      margin-top: 0.75rem;
     }
-    .card h2 {
+    h2 {
       margin-bottom: 0.75rem;
     }
     label {
@@ -51,8 +67,8 @@
     input[type="file"],
     input[type="date"],
     input[type="time"],
-    select,
-    textarea {
+    textarea,
+    select {
       width: 100%;
       padding: 0.5rem 0.6rem;
       border-radius: 6px;
@@ -85,6 +101,15 @@
       margin-top: 0.5rem;
       font-size: 0.8rem;
       color: #6b7280;
+    }
+    .hidden {
+      display: none;
+    }
+    /* Skript-Bereich */
+    .script-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr;
+      gap: 1rem;
     }
     .script-list {
       list-style: none;
@@ -119,11 +144,6 @@
       padding: 0.3rem 0.7rem;
       font-size: 0.8rem;
     }
-    .detail-section {
-      margin-top: 1rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid #e5e7eb;
-    }
     .answer-box {
       margin-top: 0.5rem;
       padding: 0.7rem;
@@ -155,22 +175,30 @@
       margin-top: 0.75rem;
       font-weight: 600;
     }
-    #notesStatus {
-      margin-top: 0.35rem;
-      font-size: 0.8rem;
-      color: #16a34a;
+    /* Notizen-Bereich */
+    .notes-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr;
+      gap: 1rem;
     }
-    .footer {
-      text-align: center;
-      padding: 1rem 0;
+    .note-list {
+      list-style: none;
+    }
+    .note-item {
+      padding: 0.5rem 0.4rem;
+      border-bottom: 1px solid #e5e7eb;
+      cursor: pointer;
+    }
+    .note-item-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .note-item-meta {
       font-size: 0.8rem;
       color: #6b7280;
     }
-    .hidden {
-      display: none;
-    }
     .notes-sort-bar {
-      margin-top: 0.5rem;
+      margin-bottom: 0.75rem;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -181,21 +209,68 @@
       width: auto;
       min-width: 140px;
     }
-    @media (min-width: 900px) {
-      .container {
-        grid-template-columns: 1.1fr 1.1fr;
-        grid-template-areas:
-          "upload detail"
-          "list detail";
-      }
-      .container > .card:nth-child(1) {
-        grid-area: upload;
-      }
-      .container > .card:nth-child(2) {
-        grid-area: list;
-      }
-      #scriptDetailCard {
-        grid-area: detail;
+    /* Kalender-Bereich */
+    .calendar-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 1rem;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .calendar-header span {
+      font-weight: 500;
+    }
+    table.calendar {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(15,23,42,0.1);
+    }
+    .calendar th,
+    .calendar td {
+      border: 1px solid #e5e7eb;
+      text-align: center;
+      padding: 0.5rem 0.3rem;
+      font-size: 0.85rem;
+    }
+    .calendar th {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+    .calendar-day {
+      cursor: pointer;
+      min-height: 2.2rem;
+      vertical-align: top;
+    }
+    .calendar-day.today {
+      background: #dbeafe;
+    }
+    .calendar-day.has-event {
+      background: #dcfce7;
+    }
+    .event-list {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    .event-item {
+      margin-bottom: 0.25rem;
+      cursor: pointer;
+    }
+    .event-item span {
+      font-weight: 500;
+    }
+    @media (max-width: 800px) {
+      .script-layout,
+      .notes-layout,
+      .calendar-layout {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -203,199 +278,254 @@
 <body>
   <header class="header">
     <h1>Lernplattform</h1>
-    <p>PDF-Skripte hochladen, Fragen stellen, Notizen machen und Tests generieren.</p>
+    <p>Tabs: Skript · Notizen · Kalender, alles in einer Seite.</p>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="scriptTab">Skript</button>
+      <button class="tab-btn" data-tab="notesTab">Notizen</button>
+      <button class="tab-btn" data-tab="calendarTab">Kalender</button>
+    </div>
   </header>
 
   <main class="container">
-    <!-- Bereich: Neues Skript anlegen -->
-    <section class="card">
-      <h2>Neues Skript anlegen</h2>
-      <form id="uploadForm">
-        <label for="scriptTitle">Titel des Skripts</label>
-        <input type="text" id="scriptTitle" required placeholder="z.B. Statistik Vorlesung SS26">
+    <!-- SKRIPT TAB -->
+    <section id="scriptTab" class="card">
+      <h2>Skripte & Lernen</h2>
+      <div class="script-layout">
+        <!-- links: Upload + Liste -->
+        <div>
+          <h3>Neues Skript anlegen</h3>
+          <form id="uploadForm">
+            <label for="scriptTitle">Titel des Skripts</label>
+            <input type="text" id="scriptTitle" required placeholder="z.B. Statistik Vorlesung SS26">
 
-        <label for="scriptDate">Datum</label>
-        <input type="date" id="scriptDate" required>
+            <label for="scriptDate">Datum</label>
+            <input type="date" id="scriptDate" required>
 
-        <label for="scriptTime">Uhrzeit</label>
-        <input type="time" id="scriptTime" required>
+            <label for="scriptTime">Uhrzeit</label>
+            <input type="time" id="scriptTime" required>
 
-        <label for="pdfFile">PDF-Datei</label>
-        <input type="file" id="pdfFile" accept="application/pdf" required>
+            <label for="pdfFile">PDF-Datei</label>
+            <input type="file" id="pdfFile" accept="application/pdf" required>
 
-        <button type="submit">Skript anlegen</button>
-      </form>
-      <p class="hint">
-        Hinweis: PDFs und Notizen werden nur lokal im Browser (localStorage) gespeichert,
-        nicht auf einem Server.[web:17][web:20]
-      </p>
+            <button type="submit">Skript anlegen</button>
+          </form>
+          <p class="hint">
+            PDFs und Daten werden nur lokal im Browser gespeichert (localStorage),
+            nicht auf einem Server.
+          </p>
+
+          <h3 style="margin-top: 1.5rem;">Meine Skripte</h3>
+          <ul id="scriptList" class="script-list"></ul>
+        </div>
+
+        <!-- rechts: Skript-Details -->
+        <div id="scriptDetailCard" class="hidden">
+          <h3 id="detailTitle">Skript-Ordner</h3>
+          <p class="small" id="detailMeta"></p>
+
+          <div class="detail-section">
+            <h4>PDF</h4>
+            <button id="openPdfBtn">PDF anzeigen</button>
+            <p class="small">Das PDF wird in einem neuen Tab geöffnet.</p>
+          </div>
+
+          <div class="detail-section">
+            <h4>Audio (Vorlesen)</h4>
+            <button id="playAudioBtn">Skript vorlesen</button>
+            <button id="stopAudioBtn">Vorlesen stoppen</button>
+            <p class="small">
+              Das ist eine Demo mit der Sprachausgabe des Browsers.
+              Der Text wird aus einem Platzhalter zum Skript erzeugt.
+            </p>
+          </div>
+
+          <div class="detail-section">
+            <h4>Fragen an die KI (Demo)</h4>
+            <textarea id="questionInput" rows="3"
+              placeholder="Stelle eine Frage zu diesem Skript..."></textarea>
+            <button id="askBtn">Frage stellen</button>
+            <div id="answerBox" class="answer-box"></div>
+          </div>
+
+          <div class="detail-section">
+            <h4>Test (Multiple Choice)</h4>
+            <button id="generateTestBtn">Test automatisch generieren</button>
+            <div id="testContainer" class="test-container"></div>
+            <button id="checkTestBtn" class="hidden">Test auswerten</button>
+            <p id="testResult" class="test-result"></p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Bereich: Liste aller Skripte -->
-    <section class="card">
-      <h2>Meine Skripte</h2>
+    <!-- NOTIZEN TAB -->
+    <section id="notesTab" class="card hidden">
+      <h2>Notizen & Lernzettel</h2>
+      <div class="notes-layout">
+        <div>
+          <div class="notes-sort-bar">
+            <span>Notizen sortieren nach:</span>
+            <select id="noteSortSelect">
+              <option value="updated_desc">Zuletzt geändert</option>
+              <option value="updated_asc">Älteste zuerst</option>
+              <option value="title_asc">Titel A-Z</option>
+              <option value="title_desc">Titel Z-A</option>
+            </select>
+          </div>
+          <ul id="noteList" class="note-list"></ul>
+        </div>
+        <div>
+          <h3>Notiz bearbeiten</h3>
+          <label for="noteTitle">Titel</label>
+          <input type="text" id="noteTitle" placeholder="z.B. Lernzettel Kapitel 1">
 
-      <div class="notes-sort-bar">
-        <span>Skripte sortieren nach:</span>
-        <select id="sortSelect">
-          <option value="created_desc">Neueste zuerst</option>
-          <option value="created_asc">Älteste zuerst</option>
-          <option value="date_time_asc">Datum/Uhrzeit aufsteigend</option>
-          <option value="date_time_desc">Datum/Uhrzeit absteigend</option>
-          <option value="title_asc">Titel A-Z</option>
-          <option value="title_desc">Titel Z-A</option>
-        </select>
+          <label for="noteContent">Inhalt</label>
+          <textarea id="noteContent" rows="8"
+            placeholder="Schreibe hier deine Notizen oder Lernzettel..."></textarea>
+
+          <button id="saveNoteBtn">Notiz speichern</button>
+          <button id="newNoteBtn" style="background:#6b7280;">Neue Notiz</button>
+          <p class="small" id="noteStatus"></p>
+        </div>
       </div>
-
-      <ul id="scriptList" class="script-list">
-        <!-- wird per JavaScript gefüllt -->
-      </ul>
     </section>
 
-    <!-- Detailbereich: Ausgewähltes Skript -->
-    <section id="scriptDetailCard" class="card hidden">
-      <h2 id="detailTitle">Skript-Ordner</h2>
+    <!-- KALENDER TAB -->
+    <section id="calendarTab" class="card hidden">
+      <h2>Kalender & Termine</h2>
+      <div class="calendar-layout">
+        <!-- Kalender links -->
+        <div>
+          <div class="calendar-header">
+            <button id="prevMonthBtn">&lt;</button>
+            <span id="calendarTitle"></span>
+            <button id="nextMonthBtn">&gt;</button>
+          </div>
+          <table class="calendar">
+            <thead>
+              <tr>
+                <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
+              </tr>
+            </thead>
+            <tbody id="calendarBody"></tbody>
+          </table>
+        </div>
+        <!-- Termine rechts -->
+        <div>
+          <h3>Termin anlegen</h3>
+          <label for="eventTitle">Titel / Vorlesung</label>
+          <input type="text" id="eventTitle" placeholder="z.B. Statistik-Vorlesung">
 
-      <!-- Skript-Metadaten -->
-      <div class="detail-section">
-        <h3>Infos</h3>
-        <p class="small" id="detailMeta"></p>
-      </div>
+          <label for="eventDate">Datum</label>
+          <input type="date" id="eventDate">
 
-      <!-- Zugriff auf das Skript -->
-      <div class="detail-section">
-        <h3>PDF</h3>
-        <button id="openPdfBtn">PDF anzeigen</button>
-        <p class="small">Das PDF wird in einem neuen Tab geöffnet.[web:13]</p>
-      </div>
+          <label for="eventTime">Uhrzeit</label>
+          <input type="time" id="eventTime">
 
-      <!-- Notizenbereich -->
-      <div class="detail-section">
-        <h3>Notizen zu diesem Skript</h3>
-        <textarea id="notesInput" rows="5"
-          placeholder="Schreibe hier deine Notizen zu diesem Skript..."></textarea>
-        <button id="saveNotesBtn">Notizen speichern</button>
-        <p class="small" id="notesStatus"></p>
-      </div>
+          <label for="eventScript">Verknüpftes Skript</label>
+          <select id="eventScript">
+            <option value="">Kein Skript</option>
+          </select>
 
-      <!-- KI-Fragenbereich (Fake-KI) -->
-      <div class="detail-section">
-        <h3>Fragen an die KI (Demo)</h3>
-        <textarea id="questionInput" rows="3"
-          placeholder="Stelle eine Frage zu diesem Skript..."></textarea>
-        <button id="askBtn">Frage stellen</button>
-        <div id="answerBox" class="answer-box"></div>
-      </div>
+          <button id="saveEventBtn">Termin speichern</button>
+          <p class="small">
+            Wenn du einen Termin mit einem Skript verknüpfst, kannst du später im Kalender
+            auf den Termin klicken und das Skript öffnet sich automatisch.
+          </p>
 
-      <!-- Testbereich -->
-      <div class="detail-section">
-        <h3>Test (Multiple Choice)</h3>
-        <button id="generateTestBtn">Test automatisch generieren</button>
-        <div id="testContainer" class="test-container"></div>
-        <button id="checkTestBtn" class="hidden">Test auswerten</button>
-        <p id="testResult" class="test-result"></p>
+          <h3 style="margin-top:1.2rem;">Termine am ausgewählten Tag</h3>
+          <div id="eventList" class="event-list"></div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <p>Uni-Projekt · GitHub Pages (statische Website)</p>
-  </footer>
-
   <script>
-    // ---- Datenmodell ----
-    const STORAGE_KEY = "lernplattform_scripts_v2";
+    // ------------------- Gemeinsame Datenstrukturen -------------------
+    const SCRIPT_KEY = "lernplattform_scripts_v3";
+    const NOTE_KEY = "lernplattform_notes_v1";
+    const EVENT_KEY = "lernplattform_events_v1";
 
-    // Script: { id, title, pdfDataUrl, previewText, date, time, notes, createdAt }
+    let scripts = loadFromStorage(SCRIPT_KEY) || [];
+    let notes = loadFromStorage(NOTE_KEY) || [];
+    let events = loadFromStorage(EVENT_KEY) || [];
 
-    let scripts = loadScripts();
     let currentScriptId = null;
-    let currentSortMode = "created_desc";
+    let currentNoteId = null;
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let selectedDateStr = formatDateKey(new Date()); // yyyy-mm-dd
 
-    function loadScripts() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
+    function loadFromStorage(key) {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
       try {
         return JSON.parse(raw);
       } catch {
-        return [];
+        return null;
       }
     }
-
-    function saveScripts() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(scripts));
+    function saveToStorage(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
     }
 
-    // ---- DOM-Elemente ----
+    // ------------------- Tab-Wechsel -------------------
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const scriptTab = document.getElementById("scriptTab");
+    const notesTab = document.getElementById("notesTab");
+    const calendarTab = document.getElementById("calendarTab");
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const tab = btn.dataset.tab;
+        scriptTab.classList.add("hidden");
+        notesTab.classList.add("hidden");
+        calendarTab.classList.add("hidden");
+        document.getElementById(tab).classList.remove("hidden");
+      });
+    });
+
+    function openTab(tabId) {
+      tabButtons.forEach(b => {
+        b.classList.toggle("active", b.dataset.tab === tabId);
+      });
+      scriptTab.classList.toggle("hidden", tabId !== "scriptTab");
+      notesTab.classList.toggle("hidden", tabId !== "notesTab");
+      calendarTab.classList.toggle("hidden", tabId !== "calendarTab");
+    }
+
+    // ------------------- SKRIPT-BEREICH -------------------
     const uploadForm = document.getElementById("uploadForm");
     const scriptList = document.getElementById("scriptList");
     const scriptDetailCard = document.getElementById("scriptDetailCard");
     const detailTitle = document.getElementById("detailTitle");
     const detailMeta = document.getElementById("detailMeta");
     const openPdfBtn = document.getElementById("openPdfBtn");
-
-    const notesInput = document.getElementById("notesInput");
-    const saveNotesBtn = document.getElementById("saveNotesBtn");
-    const notesStatus = document.getElementById("notesStatus");
-
+    const playAudioBtn = document.getElementById("playAudioBtn");
+    const stopAudioBtn = document.getElementById("stopAudioBtn");
     const questionInput = document.getElementById("questionInput");
     const askBtn = document.getElementById("askBtn");
     const answerBox = document.getElementById("answerBox");
-
     const generateTestBtn = document.getElementById("generateTestBtn");
     const testContainer = document.getElementById("testContainer");
     const checkTestBtn = document.getElementById("checkTestBtn");
     const testResult = document.getElementById("testResult");
 
-    const sortSelect = document.getElementById("sortSelect");
-
-    // ---- Helper: Sortierung ----
-    function sortScripts() {
-      scripts.sort((a, b) => {
-        const titleA = (a.title || "").toLowerCase();
-        const titleB = (b.title || "").toLowerCase();
-        const dtA = (a.date || "") + " " + (a.time || "");
-        const dtB = (b.date || "") + " " + (b.time || "");
-        const createdA = a.createdAt || 0;
-        const createdB = b.createdAt || 0;
-
-        switch (currentSortMode) {
-          case "title_asc":
-            return titleA.localeCompare(titleB);
-          case "title_desc":
-            return titleB.localeCompare(titleA);
-          case "date_time_asc":
-            return dtA.localeCompare(dtB);
-          case "date_time_desc":
-            return dtB.localeCompare(dtA);
-          case "created_asc":
-            return createdA - createdB;
-          case "created_desc":
-          default:
-            return createdB - createdA;
-        }
-      });
-    }
-
-    sortSelect.addEventListener("change", () => {
-      currentSortMode = sortSelect.value;
-      sortScripts();
-      renderScriptList();
-    });
-
-    // ---- Rendering ----
     function renderScriptList() {
       scriptList.innerHTML = "";
       if (scripts.length === 0) {
         const li = document.createElement("li");
         li.textContent = "Noch keine Skripte angelegt.";
         scriptList.appendChild(li);
+        updateEventScriptOptions();
         return;
       }
 
-      sortScripts();
+      scripts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-      scripts.forEach((s) => {
+      scripts.forEach(s => {
         const li = document.createElement("li");
         li.className = "script-item";
 
@@ -410,18 +540,9 @@
         metaSpan.className = "script-meta";
 
         let dtText = "";
-        if (s.date && s.time) {
-          dtText = `${s.date} · ${s.time} Uhr`;
-        } else if (s.date) {
-          dtText = s.date;
-        }
-
-        const notesShort = (s.notes || "").trim();
-        const notesInfo = notesShort
-          ? " | Notizen vorhanden"
-          : " | Noch keine Notizen";
-
-        metaSpan.textContent = dtText ? dtText + notesInfo : notesInfo;
+        if (s.date) dtText += s.date;
+        if (s.time) dtText += (dtText ? " · " : "") + s.time + " Uhr";
+        metaSpan.textContent = dtText || "Kein Datum/Uhrzeit gesetzt.";
 
         mainDiv.appendChild(titleSpan);
         mainDiv.appendChild(metaSpan);
@@ -445,49 +566,44 @@
         li.appendChild(actionsDiv);
         scriptList.appendChild(li);
       });
+
+      updateEventScriptOptions();
     }
 
     function selectScript(id) {
       currentScriptId = id;
-      const script = scripts.find((s) => s.id === id);
+      const script = scripts.find(s => s.id === id);
       if (!script) return;
 
-      detailTitle.textContent = `Skript: ${script.title}`;
+      detailTitle.textContent = "Skript: " + script.title;
+      const parts = [];
+      if (script.date) parts.push(script.date);
+      if (script.time) parts.push(script.time + " Uhr");
+      detailMeta.textContent = parts.join(" · ") || "Kein Datum/Uhrzeit gesetzt.";
 
-      const dtParts = [];
-      if (script.date) dtParts.push(script.date);
-      if (script.time) dtParts.push(script.time + " Uhr");
-      const dtText = dtParts.join(" · ");
-
-      detailMeta.textContent = dtText || "Kein Datum/Uhrzeit gesetzt.";
-
-      notesInput.value = script.notes || "";
-      notesStatus.textContent = "";
-
+      scriptDetailCard.classList.remove("hidden");
+      // Reset KI/Test-Anzeige
       answerBox.textContent = "";
       questionInput.value = "";
       testContainer.innerHTML = "";
       testResult.textContent = "";
       checkTestBtn.classList.add("hidden");
-
-      scriptDetailCard.classList.remove("hidden");
     }
 
     function deleteScript(id) {
       if (!confirm("Willst du dieses Skript wirklich löschen?")) return;
-      scripts = scripts.filter((s) => s.id !== id);
-      saveScripts();
+      scripts = scripts.filter(s => s.id !== id);
+      saveToStorage(SCRIPT_KEY, scripts);
       renderScriptList();
       if (currentScriptId === id) {
         currentScriptId = null;
         scriptDetailCard.classList.add("hidden");
       }
+      // Events, die dieses Skript referenzieren, könnten ggf. angepasst werden
     }
 
-    // ---- Upload-Handling ----
     uploadForm.addEventListener("submit", (e) => {
       e.preventDefault();
-
       const titleInput = document.getElementById("scriptTitle");
       const pdfInput = document.getElementById("pdfFile");
       const dateInput = document.getElementById("scriptDate");
@@ -506,127 +622,98 @@
       const reader = new FileReader();
       reader.onload = () => {
         const pdfDataUrl = reader.result;
-
         const newScript = {
           id: Date.now(),
           title,
           pdfDataUrl,
-          previewText: `Dies ist ein Platzhalter für den Inhalt von "${title}".`,
           date,
           time,
-          notes: "",
+          previewText: `Dies ist ein Platzhalter-Text für das Skript "${title}". Verwende das echte Skript zum Lernen.`,
           createdAt: Date.now()
         };
-
         scripts.push(newScript);
-        saveScripts();
+        saveToStorage(SCRIPT_KEY, scripts);
         renderScriptList();
         selectScript(newScript.id);
-
         uploadForm.reset();
       };
-
       reader.readAsDataURL(file);
     });
 
-    // ---- PDF öffnen ----
     openPdfBtn.addEventListener("click", () => {
       if (!currentScriptId) return;
-      const script = scripts.find((s) => s.id === currentScriptId);
+      const script = scripts.find(s => s.id === currentScriptId);
       if (!script || !script.pdfDataUrl) return;
-      window.open(script.pdfDataUrl, "_blank"); // neues Tab mit PDF[web:13]
+      window.open(script.pdfDataUrl, "_blank");
     });
 
-    // ---- Notizen speichern ----
-    saveNotesBtn.addEventListener("click", () => {
+    // Text-to-Speech Demo
+    let speechUtterance = null;
+    playAudioBtn.addEventListener("click", () => {
       if (!currentScriptId) return;
-      const script = scripts.find((s) => s.id === currentScriptId);
+      const script = scripts.find(s => s.id === currentScriptId);
       if (!script) return;
-
-      script.notes = notesInput.value;
-      saveScripts();
-      sortScripts();
-      renderScriptList();
-
-      const now = new Date();
-      const timeString = now.toLocaleTimeString("de-DE", {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-      notesStatus.textContent = `Gespeichert um ${timeString}.`;
-      setTimeout(() => {
-        notesStatus.textContent = "";
-      }, 3000);
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+      }
+      const text = script.previewText || `Dies ist das Skript ${script.title}.`;
+      speechUtterance = new SpeechSynthesisUtterance(text);
+      speechUtterance.lang = "de-DE";
+      speechSynthesis.speak(speechUtterance);
+    });
+    stopAudioBtn.addEventListener("click", () => {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+      }
     });
 
-    // ---- Fake-KI für Fragen ----
+    // Fake-KI
     askBtn.addEventListener("click", () => {
       if (!currentScriptId) return;
-
       const question = questionInput.value.trim();
       if (!question) {
         alert("Bitte eine Frage eingeben.");
         return;
       }
-
-      const script = scripts.find((s) => s.id === currentScriptId);
-
+      const script = scripts.find(s => s.id === currentScriptId);
       answerBox.textContent = "Die KI denkt nach...";
       askBtn.disabled = true;
-
       setTimeout(() => {
-        const response =
+        answerBox.textContent =
           `Dies ist eine simulierte KI-Antwort zu deiner Frage: "${question}". ` +
-          `Nutze das Skript "${script.title}", um dir Definitionen und Beispiele genauer anzusehen.`;
-
-        answerBox.textContent = response;
+          `Überlege dir, wie der Inhalt von "${script.title}" diese Frage beantwortet und markiere dir die wichtigsten Stellen im Skript.`;
         askBtn.disabled = false;
       }, 700);
     });
 
-    // ---- Testgeneration (Fake-KI) ----
     generateTestBtn.addEventListener("click", () => {
       if (!currentScriptId) return;
-      const script = scripts.find((s) => s.id === currentScriptId);
-      const questions = buildFakeQuestions(script);
-      renderTest(questions);
-      testResult.textContent = "";
-    });
-
-    function buildFakeQuestions(script) {
-      return [
+      const script = scripts.find(s => s.id === currentScriptId);
+      const questions = [
         {
           text: `Worum geht es hauptsächlich im Skript "${script.title}"?`,
           options: [
-            "Um den Inhalt deines Lieblingsromans.",
-            "Um ein Thema aus deiner Vorlesung / deinem Kurs.",
-            "Um zufällige Themen ohne Zusammenhang.",
-            "Um ausschließlich Programmieraufgaben."
-          ],
-          correctIndex: 1
-        },
-        {
-          text: "Wie solltest du beim Lernen mit diesem Skript vorgehen?",
-          options: [
-            "Gar nicht lesen, nur raten.",
-            "Nur die Überschriften ansehen.",
-            "Aktiv Notizen machen und wichtige Begriffe markieren.",
-            "Nur kurz vor der Klausur in einer Nacht alles lesen."
-          ],
-          correctIndex: 2
-        },
-        {
-          text: "Was ist ein sinnvoller Einsatz dieser Plattform?",
-          options: [
-            "Skripte strukturieren, Fragen klären und automatisierte Tests nutzen.",
-            "Nur zum Hochladen von Urlaubsfotos.",
-            "Zum Versenden von Werbe-E-Mails.",
-            "Zum Speichern von sehr großen Video-Dateien."
+            "Um ein Thema aus deiner Vorlesung.",
+            "Um ein Kochrezept.",
+            "Um zufällige Themen.",
+            "Um nichts Konkretes."
           ],
           correctIndex: 0
+        },
+        {
+          text: "Was ist eine sinnvolle Lernstrategie mit diesem Skript?",
+          options: [
+            "Alles ignorieren.",
+            "Nur die Bilder anschauen.",
+            "Aktiv Notizen machen und Aufgaben bearbeiten.",
+            "Nur am Abend vor der Klausur lesen."
+          ],
+          correctIndex: 2
         }
       ];
-    }
+      renderTest(questions);
+      testResult.textContent = "";
+    });
 
     function renderTest(questions) {
       testContainer.innerHTML = "";
@@ -645,49 +732,310 @@
         q.options.forEach((opt, optIndex) => {
           const label = document.createElement("label");
           label.className = "option";
-
           const radio = document.createElement("input");
           radio.type = "radio";
           radio.name = `q_${index}`;
           radio.value = optIndex;
-
           label.appendChild(radio);
-          label.append(` ${opt}`);
+          label.append(" " + opt);
           block.appendChild(label);
         });
 
         testContainer.appendChild(block);
       });
 
-      checkTestBtn.onclick = () => evaluateTest();
+      checkTestBtn.onclick = () => {
+        const blocks = Array.from(testContainer.getElementsByClassName("question-block"));
+        let correct = 0;
+        const total = blocks.length;
+        blocks.forEach((block, index) => {
+          const correctIndex = Number(block.dataset.correctIndex);
+          const selected = block.querySelector(`input[name="q_${index}"]:checked`);
+          if (selected && Number(selected.value) === correctIndex) correct++;
+        });
+        testResult.textContent = `Du hast ${correct} von ${total} Fragen richtig beantwortet.`;
+      };
     }
 
-    function evaluateTest() {
-      const blocks = Array.from(
-        testContainer.getElementsByClassName("question-block")
-      );
-      if (blocks.length === 0) return;
+    // ------------------- NOTIZEN-BEREICH -------------------
+    const noteList = document.getElementById("noteList");
+    const noteSortSelect = document.getElementById("noteSortSelect");
+    const noteTitle = document.getElementById("noteTitle");
+    const noteContent = document.getElementById("noteContent");
+    const saveNoteBtn = document.getElementById("saveNoteBtn");
+    const newNoteBtn = document.getElementById("newNoteBtn");
+    const noteStatus = document.getElementById("noteStatus");
 
-      let correct = 0;
-      let total = blocks.length;
-
-      blocks.forEach((block, index) => {
-        const correctIndex = Number(block.dataset.correctIndex);
-        const selected = block.querySelector(
-          `input[name="q_${index}"]:checked`
-        );
-
-        if (selected && Number(selected.value) === correctIndex) {
-          correct++;
+    function renderNotes() {
+      noteList.innerHTML = "";
+      if (notes.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "Noch keine Notizen angelegt.";
+        noteList.appendChild(li);
+        return;
+      }
+      const mode = noteSortSelect.value;
+      notes.sort((a, b) => {
+        const tA = (a.title || "").toLowerCase();
+        const tB = (b.title || "").toLowerCase();
+        const uA = a.updatedAt || 0;
+        const uB = b.updatedAt || 0;
+        switch (mode) {
+          case "title_asc": return tA.localeCompare(tB);
+          case "title_desc": return tB.localeCompare(tA);
+          case "updated_asc": return uA - uB;
+          case "updated_desc":
+          default: return uB - uA;
         }
       });
 
-      testResult.textContent = `Du hast ${correct} von ${total} Fragen richtig beantwortet.`;
+      notes.forEach(n => {
+        const li = document.createElement("li");
+        li.className = "note-item";
+        li.addEventListener("click", () => selectNote(n.id));
+
+        const tSpan = document.createElement("div");
+        tSpan.className = "note-item-title";
+        tSpan.textContent = n.title || "(ohne Titel)";
+
+        const metaSpan = document.createElement("div");
+        metaSpan.className = "note-item-meta";
+        const d = n.updatedAt ? new Date(n.updatedAt) : null;
+        metaSpan.textContent = d
+          ? "Zuletzt geändert: " + d.toLocaleString("de-DE")
+          : "Noch nie gespeichert";
+
+        li.appendChild(tSpan);
+        li.appendChild(metaSpan);
+        noteList.appendChild(li);
+      });
     }
 
-    // ---- Start ----
-    sortScripts();
+    function selectNote(id) {
+      currentNoteId = id;
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+      noteTitle.value = note.title || "";
+      noteContent.value = note.content || "";
+      noteStatus.textContent = "";
+    }
+
+    function clearNoteEditor() {
+      currentNoteId = null;
+      noteTitle.value = "";
+      noteContent.value = "";
+      noteStatus.textContent = "";
+    }
+
+    saveNoteBtn.addEventListener("click", () => {
+      const title = noteTitle.value.trim();
+      const content = noteContent.value;
+      if (!title && !content.trim()) {
+        alert("Bitte zumindest einen Titel oder Inhalt eingeben.");
+        return;
+      }
+      const now = Date.now();
+      if (!currentNoteId) {
+        const newNote = {
+          id: now,
+          title,
+          content,
+          updatedAt: now
+        };
+        notes.push(newNote);
+        currentNoteId = newNote.id;
+      } else {
+        const note = notes.find(n => n.id === currentNoteId);
+        if (note) {
+          note.title = title;
+          note.content = content;
+          note.updatedAt = now;
+        }
+      }
+      saveToStorage(NOTE_KEY, notes);
+      renderNotes();
+      noteStatus.textContent = "Notiz gespeichert.";
+      setTimeout(() => noteStatus.textContent = "", 2500);
+    });
+
+    newNoteBtn.addEventListener("click", () => {
+      clearNoteEditor();
+    });
+
+    noteSortSelect.addEventListener("change", renderNotes);
+
+    // ------------------- KALENDER-BEREICH -------------------
+    const calendarTitle = document.getElementById("calendarTitle");
+    const calendarBody = document.getElementById("calendarBody");
+    const prevMonthBtn = document.getElementById("prevMonthBtn");
+    const nextMonthBtn = document.getElementById("nextMonthBtn");
+    const eventTitle = document.getElementById("eventTitle");
+    const eventDate = document.getElementById("eventDate");
+    const eventTime = document.getElementById("eventTime");
+    const eventScript = document.getElementById("eventScript");
+    const saveEventBtn = document.getElementById("saveEventBtn");
+    const eventList = document.getElementById("eventList");
+
+    function updateEventScriptOptions() {
+      const prevValue = eventScript.value;
+      eventScript.innerHTML = '<option value="">Kein Skript</option>';
+      scripts.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = String(s.id);
+        opt.textContent = s.title;
+        eventScript.appendChild(opt);
+      });
+      if (prevValue) {
+        eventScript.value = prevValue;
+      }
+    }
+
+    function formatDateKey(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function renderCalendar() {
+      const monthNames = [
+        "Januar","Februar","März","April","Mai","Juni",
+        "Juli","August","September","Oktober","November","Dezember"
+      ];
+      calendarTitle.textContent = monthNames[currentMonth] + " " + currentYear;
+      calendarBody.innerHTML = "";
+
+      const firstDay = new Date(currentYear, currentMonth, 1);
+      let start = firstDay.getDay();
+      start = start === 0 ? 6 : start - 1;
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      let dayNumber = 1;
+      const totalCells = start + daysInMonth;
+      const rowsNeeded = Math.ceil(totalCells / 7);
+      const today = new Date();
+      const todayKey = formatDateKey(today);
+
+      for (let rowIndex = 0; rowIndex < rowsNeeded; rowIndex++) {
+        const row = document.createElement("tr");
+        for (let colIndex = 0; colIndex < 7; colIndex++) {
+          const cell = document.createElement("td");
+          const cellIndex = rowIndex * 7 + colIndex;
+          if (cellIndex < start || dayNumber > daysInMonth) {
+            cell.textContent = "";
+            row.appendChild(cell);
+            continue;
+          }
+
+          const dateObj = new Date(currentYear, currentMonth, dayNumber);
+          const dateKey = formatDateKey(dateObj);
+          cell.className = "calendar-day";
+          cell.textContent = dayNumber;
+
+          const hasEventsForDay = events.some(ev => ev.date === dateKey);
+          if (hasEventsForDay) {
+            cell.classList.add("has-event");
+          }
+          if (dateKey === todayKey) {
+            cell.classList.add("today");
+          }
+
+          cell.addEventListener("click", () => {
+            selectedDateStr = dateKey;
+            eventDate.value = dateKey;
+            renderEventList();
+          });
+
+          row.appendChild(cell);
+          dayNumber++;
+        }
+        calendarBody.appendChild(row);
+      }
+
+      // Nach Neuaufbau sicherstellen, dass Eventliste für ausgewähltes Datum angezeigt wird
+      eventDate.value = selectedDateStr;
+      renderEventList();
+    }
+
+    prevMonthBtn.addEventListener("click", () => {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      renderCalendar();
+    });
+    nextMonthBtn.addEventListener("click", () => {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      renderCalendar();
+    });
+
+    function renderEventList() {
+      eventList.innerHTML = "";
+      const dayEvents = events
+        .filter(ev => ev.date === selectedDateStr)
+        .sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+
+      if (dayEvents.length === 0) {
+        eventList.textContent = "Keine Termine an diesem Tag.";
+        return;
+      }
+
+      dayEvents.forEach(ev => {
+        const div = document.createElement("div");
+        div.className = "event-item";
+        const timeText = ev.time ? ev.time + " Uhr" : "keine Zeit";
+        const script = scripts.find(s => s.id === ev.scriptId);
+        const scriptText = script ? ` · Skript: ${script.title}` : "";
+        div.innerHTML = `<span>${timeText}</span> – ${ev.title}${scriptText}`;
+        div.addEventListener("click", () => {
+          if (ev.scriptId && scripts.find(s => s.id === ev.scriptId)) {
+            currentScriptId = ev.scriptId;
+            openTab("scriptTab");
+            selectScript(ev.scriptId);
+          }
+        });
+        eventList.appendChild(div);
+      });
+    }
+
+    saveEventBtn.addEventListener("click", () => {
+      const title = eventTitle.value.trim();
+      const date = eventDate.value;
+      const time = eventTime.value;
+      const scriptId = eventScript.value ? Number(eventScript.value) : null;
+
+      if (!title || !date) {
+        alert("Bitte mindestens Titel und Datum für den Termin angeben.");
+        return;
+      }
+
+      const newEvent = {
+        id: Date.now(),
+        title,
+        date,
+        time,
+        scriptId
+      };
+      events.push(newEvent);
+      saveToStorage(EVENT_KEY, events);
+      selectedDateStr = date;
+      renderCalendar();
+      eventTitle.value = "";
+      eventTime.value = "";
+      eventScript.value = "";
+    });
+
+    // ------------------- Initialer Start -------------------
     renderScriptList();
+    renderNotes();
+    renderCalendar();
+    // Kalender-Standarddatum setzen
+    eventDate.value = selectedDateStr;
   </script>
 </body>
 </html>
