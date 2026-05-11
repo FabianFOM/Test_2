@@ -2,1040 +2,624 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Lernplattform – Skripte, Notizen, Kalender</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lernplattform</title>
+
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, sans-serif;
     }
+
     body {
       background: #f4f5f7;
       color: #222;
     }
+
     .header {
       background: #111827;
-      color: #f9fafb;
-      padding: 1.5rem 2rem;
+      color: white;
+      padding: 1.5rem;
       text-align: center;
     }
-    .header h1 {
-      font-size: 1.8rem;
-      margin-bottom: 0.4rem;
-    }
+
     .tabs {
       display: flex;
       justify-content: center;
       gap: 0.5rem;
-      margin: 1rem auto 0;
+      margin-top: 1rem;
+      flex-wrap: wrap;
     }
+
     .tab-btn {
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
+      padding: 0.6rem 1rem;
       border: none;
+      border-radius: 999px;
       background: #e5e7eb;
       cursor: pointer;
-      font-size: 0.95rem;
     }
+
     .tab-btn.active {
       background: #2563eb;
-      color: #f9fafb;
+      color: white;
     }
+
     .container {
-      max-width: 1100px;
-      margin: 1rem auto 2rem;
-      padding: 0 1rem;
+      max-width: 1300px;
+      margin: 1rem auto;
+      padding: 1rem;
     }
+
     .card {
-      background: #ffffff;
-      border-radius: 8px;
-      padding: 1.25rem 1.5rem;
-      box-shadow: 0 1px 3px rgba(15,23,42,0.1);
-      margin-top: 0.75rem;
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
     }
-    h2 {
-      margin-bottom: 0.75rem;
-    }
-    label {
-      display: block;
-      margin-top: 0.75rem;
-      margin-bottom: 0.25rem;
-      font-weight: 500;
-    }
-    input[type="text"],
-    input[type="file"],
-    input[type="date"],
-    input[type="time"],
-    textarea,
-    select {
-      width: 100%;
-      padding: 0.5rem 0.6rem;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
-      font-size: 0.95rem;
-    }
-    textarea {
-      resize: vertical;
-    }
-    button {
-      margin-top: 0.9rem;
-      padding: 0.45rem 0.9rem;
-      border-radius: 6px;
-      border: none;
-      background: #2563eb;
-      color: #f9fafb;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: background 0.15s ease;
-    }
-    button:hover {
-      background: #1d4ed8;
-    }
-    button:disabled {
-      background: #9ca3af;
-      cursor: default;
-    }
-    .hint,
-    .small {
-      margin-top: 0.5rem;
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
+
     .hidden {
       display: none;
     }
-    /* Skript-Bereich */
-    .script-layout {
-      display: grid;
-      grid-template-columns: 1.1fr 1.1fr;
-      gap: 1rem;
-    }
-    .script-list {
-      list-style: none;
-    }
-    .script-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0.25rem;
-      border-bottom: 1px solid #e5e7eb;
-      gap: 0.5rem;
-    }
-    .script-main {
-      display: flex;
-      flex-direction: column;
-      font-size: 0.9rem;
-    }
-    .script-title {
-      font-weight: 500;
-    }
-    .script-meta {
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
-    .script-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-    .script-actions button {
-      margin-top: 0;
-      padding: 0.3rem 0.7rem;
-      font-size: 0.8rem;
-    }
-    .answer-box {
-      margin-top: 0.5rem;
-      padding: 0.7rem;
+
+    button {
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 0.6rem 1rem;
       border-radius: 6px;
-      background: #eff6ff;
-      font-size: 0.9rem;
-      min-height: 2rem;
-    }
-    .test-container {
-      margin-top: 0.75rem;
-    }
-    .question-block {
-      margin-bottom: 0.9rem;
-      padding: 0.7rem;
-      border-radius: 6px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-    }
-    .question-text {
-      font-weight: 500;
-      margin-bottom: 0.4rem;
-    }
-    .option {
-      display: block;
-      font-size: 0.9rem;
-      margin-top: 0.2rem;
-    }
-    .test-result {
-      margin-top: 0.75rem;
-      font-weight: 600;
-    }
-    /* Notizen-Bereich */
-    .notes-layout {
-      display: grid;
-      grid-template-columns: 1.1fr 1.1fr;
-      gap: 1rem;
-    }
-    .note-list {
-      list-style: none;
-    }
-    .note-item {
-      padding: 0.5rem 0.4rem;
-      border-bottom: 1px solid #e5e7eb;
       cursor: pointer;
     }
-    .note-item-title {
-      font-weight: 500;
-      font-size: 0.95rem;
+
+    button:hover {
+      background: #1d4ed8;
     }
-    .note-item-meta {
-      font-size: 0.8rem;
-      color: #6b7280;
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      margin-top: 0.4rem;
+      margin-bottom: 1rem;
     }
-    .notes-sort-bar {
-      margin-bottom: 0.75rem;
+
+    textarea {
+      resize: vertical;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    .workspace-toolbar {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
       gap: 0.5rem;
-      font-size: 0.85rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
     }
-    .notes-sort-bar select {
-      width: auto;
-      min-width: 140px;
-    }
-    /* Kalender-Bereich */
-    .calendar-layout {
+
+    .workspace-layout {
       display: grid;
-      grid-template-columns: 1fr 1.1fr;
+      grid-template-columns: 260px 1fr;
       gap: 1rem;
     }
-    .calendar-header {
+
+    .folder-sidebar {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 1rem;
+      min-height: 700px;
+    }
+
+    .folder-item {
+      padding: 0.7rem;
+      border-radius: 8px;
+      background: #f3f4f6;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+
+    .folder-item:hover {
+      background: #dbeafe;
+    }
+
+    .folder-item.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .workspace-canvas {
+      position: relative;
+      min-height: 700px;
+      background: white;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .workspace-item {
+      position: absolute;
+      width: 250px;
+      min-height: 180px;
+      background: #f9fafb;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 0.75rem;
+      resize: both;
+      overflow: auto;
+      cursor: move;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .workspace-item textarea {
+      border: none;
+      resize: none;
+      background: transparent;
+      outline: none;
+      height: 120px;
+      margin: 0;
+    }
+
+    .workspace-item img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .workspace-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.5rem;
     }
-    .calendar-header span {
-      font-weight: 500;
-    }
-    table.calendar {
-      width: 100%;
-      border-collapse: collapse;
-      background: #ffffff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(15,23,42,0.1);
-    }
-    .calendar th,
-    .calendar td {
-      border: 1px solid #e5e7eb;
-      text-align: center;
-      padding: 0.5rem 0.3rem;
-      font-size: 0.85rem;
-    }
-    .calendar th {
-      background: #f3f4f6;
-      font-weight: 600;
-    }
-    .calendar-day {
-      cursor: pointer;
-      min-height: 2.2rem;
-      vertical-align: top;
-    }
-    .calendar-day.today {
-      background: #dbeafe;
-    }
-    .calendar-day.has-event {
-      background: #dcfce7;
-    }
-    .event-list {
-      margin-top: 0.5rem;
+
+    .delete-btn {
+      background: #dc2626;
+      padding: 0.3rem 0.6rem;
       font-size: 0.8rem;
-      text-align: left;
     }
-    .event-item {
-      margin-bottom: 0.25rem;
-      cursor: pointer;
-    }
-    .event-item span {
-      font-weight: 500;
-    }
-    @media (max-width: 800px) {
-      .script-layout,
-      .notes-layout,
-      .calendar-layout {
+
+    @media(max-width: 900px) {
+      .workspace-layout {
         grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
+
 <body>
-  <header class="header">
-    <h1>Lernplattform</h1>
-    <p>Tabs: Skript · Notizen · Kalender, alles in einer Seite.</p>
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="scriptTab">Skript</button>
-      <button class="tab-btn" data-tab="notesTab">Notizen</button>
-      <button class="tab-btn" data-tab="calendarTab">Kalender</button>
+
+<header class="header">
+  <h1>Lernplattform</h1>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="workspaceTab">
+      Workspace
+    </button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section id="workspaceTab" class="card">
+
+    <h2>Workspace / Lernfläche</h2>
+
+    <div class="workspace-toolbar">
+
+      <button id="createFolderBtn">
+        Ordner erstellen
+      </button>
+
+      <button id="addTextBtn">
+        Textbox hinzufügen
+      </button>
+
+      <button id="addImageBtn">
+        Bild hinzufügen
+      </button>
+
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+        style="display:none;"
+      >
+
     </div>
-  </header>
 
-  <main class="container">
-    <!-- SKRIPT TAB -->
-    <section id="scriptTab" class="card">
-      <h2>Skripte & Lernen</h2>
-      <div class="script-layout">
-        <!-- links: Upload + Liste -->
-        <div>
-          <h3>Neues Skript anlegen</h3>
-          <form id="uploadForm">
-            <label for="scriptTitle">Titel des Skripts</label>
-            <input type="text" id="scriptTitle" required placeholder="z.B. Statistik Vorlesung SS26">
+    <div class="workspace-layout">
 
-            <label for="scriptDate">Datum</label>
-            <input type="date" id="scriptDate" required>
+      <div class="folder-sidebar">
+        <h3>Ordner</h3>
 
-            <label for="scriptTime">Uhrzeit</label>
-            <input type="time" id="scriptTime" required>
-
-            <label for="pdfFile">PDF-Datei</label>
-            <input type="file" id="pdfFile" accept="application/pdf" required>
-
-            <button type="submit">Skript anlegen</button>
-          </form>
-          <p class="hint">
-            PDFs und Daten werden nur lokal im Browser gespeichert (localStorage),
-            nicht auf einem Server.
-          </p>
-
-          <h3 style="margin-top: 1.5rem;">Meine Skripte</h3>
-          <ul id="scriptList" class="script-list"></ul>
-        </div>
-
-        <!-- rechts: Skript-Details -->
-        <div id="scriptDetailCard" class="hidden">
-          <h3 id="detailTitle">Skript-Ordner</h3>
-          <p class="small" id="detailMeta"></p>
-
-          <div class="detail-section">
-            <h4>PDF</h4>
-            <button id="openPdfBtn">PDF anzeigen</button>
-            <p class="small">Das PDF wird in einem neuen Tab geöffnet.</p>
-          </div>
-
-          <div class="detail-section">
-            <h4>Audio (Vorlesen)</h4>
-            <button id="playAudioBtn">Skript vorlesen</button>
-            <button id="stopAudioBtn">Vorlesen stoppen</button>
-            <p class="small">
-              Demo mit der Sprachausgabe des Browsers. Der Text kommt aus einem Platzhalter.
-            </p>
-          </div>
-
-          <div class="detail-section">
-            <h4>Fragen an die KI (Demo)</h4>
-            <textarea id="questionInput" rows="3"
-              placeholder="Stelle eine Frage zu diesem Skript..."></textarea>
-            <button id="askBtn">Frage stellen</button>
-            <div id="answerBox" class="answer-box"></div>
-          </div>
-
-          <div class="detail-section">
-            <h4>Test (Multiple Choice)</h4>
-            <button id="generateTestBtn">Test automatisch generieren</button>
-            <div id="testContainer" class="test-container"></div>
-            <button id="checkTestBtn" class="hidden">Test auswerten</button>
-            <p id="testResult" class="test-result"></p>
-          </div>
-        </div>
+        <div id="folderList"></div>
       </div>
-    </section>
 
-    <!-- NOTIZEN TAB -->
-    <section id="notesTab" class="card hidden">
-      <h2>Notizen & Lernzettel</h2>
-      <div class="notes-layout">
-        <div>
-          <div class="notes-sort-bar">
-            <span>Notizen sortieren nach:</span>
-            <select id="noteSortSelect">
-              <option value="updated_desc">Zuletzt geändert</option>
-              <option value="updated_asc">Älteste zuerst</option>
-              <option value="title_asc">Titel A-Z</option>
-              <option value="title_desc">Titel Z-A</option>
-            </select>
-          </div>
-          <ul id="noteList" class="note-list"></ul>
-        </div>
-        <div>
-          <h3>Notiz bearbeiten</h3>
-          <label for="noteTitle">Titel</label>
-          <input type="text" id="noteTitle" placeholder="z.B. Lernzettel Kapitel 1">
+      <div
+        id="workspaceCanvas"
+        class="workspace-canvas"
+      ></div>
 
-          <label for="noteContent">Inhalt</label>
-          <textarea id="noteContent" rows="8"
-            placeholder="Schreibe hier deine Notizen oder Lernzettel..."></textarea>
+    </div>
 
-          <button id="saveNoteBtn">Notiz speichern</button>
-          <button id="newNoteBtn" style="background:#6b7280;">Neue Notiz</button>
-          <p class="small" id="noteStatus"></p>
-        </div>
-      </div>
-    </section>
+  </section>
 
-    <!-- KALENDER TAB -->
-    <section id="calendarTab" class="card hidden">
-      <h2>Kalender & Termine</h2>
-      <div class="calendar-layout">
-        <!-- Kalender links -->
-        <div>
-          <div class="calendar-header">
-            <button id="prevMonthBtn">&lt;</button>
-            <span id="calendarTitle"></span>
-            <button id="nextMonthBtn">&gt;</button>
-          </div>
-          <table class="calendar">
-            <thead>
-              <tr>
-                <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
-              </tr>
-            </thead>
-            <tbody id="calendarBody"></tbody>
-          </table>
-        </div>
-        <!-- Termine rechts -->
-        <div>
-          <h3>Termin anlegen</h3>
-          <label for="eventTitle">Titel / Vorlesung</label>
-          <input type="text" id="eventTitle" placeholder="z.B. Statistik-Vorlesung">
+</main>
 
-          <label for="eventDate">Datum</label>
-          <input type="date" id="eventDate">
+<script>
 
-          <label for="eventTime">Uhrzeit</label>
-          <input type="time" id="eventTime">
+  const STORAGE_KEY = "workspace_data_v1";
 
-          <label for="eventScript">Verknüpftes Skript</label>
-          <select id="eventScript">
-            <option value="">Kein Skript</option>
-          </select>
+  let workspaceData =
+    JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
-          <button id="saveEventBtn">Termin speichern</button>
-          <p class="small">
-            Wenn du einen Termin mit einem Skript verknüpfst, kannst du im Kalender
-            auf den Termin klicken und das Skript öffnet sich automatisch.
-          </p>
+  let currentFolderId = null;
 
-          <h3 style="margin-top:1.2rem;">Termine am ausgewählten Tag</h3>
-          <div id="eventList" class="event-list"></div>
-        </div>
-      </div>
-    </section>
-  </main>
+  const folderList =
+    document.getElementById("folderList");
 
-  <script>
-    // ------------------- Gemeinsame Daten -------------------
-    const SCRIPT_KEY = "lernplattform_scripts_v3";
-    const NOTE_KEY = "lernplattform_notes_v1";
-    const EVENT_KEY = "lernplattform_events_v1";
+  const workspaceCanvas =
+    document.getElementById("workspaceCanvas");
 
-    let scripts = JSON.parse(localStorage.getItem(SCRIPT_KEY) || "[]");
-    let notes = JSON.parse(localStorage.getItem(NOTE_KEY) || "[]");
-    let events = JSON.parse(localStorage.getItem(EVENT_KEY) || "[]");
+  const createFolderBtn =
+    document.getElementById("createFolderBtn");
 
-    let currentScriptId = null;
-    let currentNoteId = null;
+  const addTextBtn =
+    document.getElementById("addTextBtn");
 
-    const today = new Date();
-    let currentMonth = today.getMonth();
-    let currentYear = today.getFullYear();
-    let selectedDateStr = formatDateKey(today); // yyyy-mm-dd
+  const addImageBtn =
+    document.getElementById("addImageBtn");
 
-    function saveScripts() {
-      localStorage.setItem(SCRIPT_KEY, JSON.stringify(scripts));
-    }
-    function saveNotes() {
-      localStorage.setItem(NOTE_KEY, JSON.stringify(notes));
-    }
-    function saveEvents() {
-      localStorage.setItem(EVENT_KEY, JSON.stringify(events));
+  const imageInput =
+    document.getElementById("imageInput");
+
+
+  function saveData() {
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(workspaceData)
+    );
+  }
+
+
+  function createFolder(name) {
+
+    const folder = {
+      id: Date.now(),
+      name,
+      items: []
+    };
+
+    workspaceData.push(folder);
+
+    saveData();
+
+    renderFolders();
+
+    selectFolder(folder.id);
+  }
+
+
+  createFolderBtn.addEventListener("click", () => {
+
+    const name = prompt("Ordnername:");
+
+    if (!name) return;
+
+    createFolder(name);
+  });
+
+
+  function renderFolders() {
+
+    folderList.innerHTML = "";
+
+    if (workspaceData.length === 0) {
+
+      folderList.innerHTML =
+        "<p>Noch keine Ordner vorhanden.</p>";
+
+      return;
     }
 
-    // ------------------- Tabs -------------------
-    const tabButtons = document.querySelectorAll(".tab-btn");
-    const scriptTab = document.getElementById("scriptTab");
-    const notesTab = document.getElementById("notesTab");
-    const calendarTab = document.getElementById("calendarTab");
+    workspaceData.forEach(folder => {
 
-    tabButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        tabButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        const tab = btn.dataset.tab;
-        scriptTab.classList.add("hidden");
-        notesTab.classList.add("hidden");
-        calendarTab.classList.add("hidden");
-        document.getElementById(tab).classList.remove("hidden");
-      });
-    });
+      const div = document.createElement("div");
 
-    function openTab(tabId) {
-      tabButtons.forEach(b => {
-        b.classList.toggle("active", b.dataset.tab === tabId);
-      });
-      scriptTab.classList.toggle("hidden", tabId !== "scriptTab");
-      notesTab.classList.toggle("hidden", tabId !== "notesTab");
-      calendarTab.classList.toggle("hidden", tabId !== "calendarTab");
-    }
+      div.className = "folder-item";
 
-    // ------------------- Skript-Bereich -------------------
-    const uploadForm = document.getElementById("uploadForm");
-    const scriptList = document.getElementById("scriptList");
-    const scriptDetailCard = document.getElementById("scriptDetailCard");
-    const detailTitle = document.getElementById("detailTitle");
-    const detailMeta = document.getElementById("detailMeta");
-    const openPdfBtn = document.getElementById("openPdfBtn");
-    const playAudioBtn = document.getElementById("playAudioBtn");
-    const stopAudioBtn = document.getElementById("stopAudioBtn");
-    const questionInput = document.getElementById("questionInput");
-    const askBtn = document.getElementById("askBtn");
-    const answerBox = document.getElementById("answerBox");
-    const generateTestBtn = document.getElementById("generateTestBtn");
-    const testContainer = document.getElementById("testContainer");
-    const checkTestBtn = document.getElementById("checkTestBtn");
-    const testResult = document.getElementById("testResult");
-    const eventScript = document.getElementById("eventScript");
-
-    function renderScriptList() {
-      scriptList.innerHTML = "";
-      if (scripts.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "Noch keine Skripte angelegt.";
-        scriptList.appendChild(li);
-        updateEventScriptOptions();
-        return;
+      if (folder.id === currentFolderId) {
+        div.classList.add("active");
       }
 
-      scripts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      div.textContent = folder.name;
 
-      scripts.forEach(s => {
-        const li = document.createElement("li");
-        li.className = "script-item";
-
-        const mainDiv = document.createElement("div");
-        mainDiv.className = "script-main";
-
-        const titleSpan = document.createElement("span");
-        titleSpan.className = "script-title";
-        titleSpan.textContent = s.title;
-
-        const metaSpan = document.createElement("span");
-        metaSpan.className = "script-meta";
-        let dtText = "";
-        if (s.date) dtText += s.date;
-        if (s.time) dtText += (dtText ? " · " : "") + s.time + " Uhr";
-        metaSpan.textContent = dtText || "Kein Datum/Uhrzeit gesetzt.";
-
-        mainDiv.appendChild(titleSpan);
-        mainDiv.appendChild(metaSpan);
-
-        const actionsDiv = document.createElement("div");
-        actionsDiv.className = "script-actions";
-
-        const openBtn = document.createElement("button");
-        openBtn.textContent = "Ordner öffnen";
-        openBtn.addEventListener("click", () => selectScript(s.id));
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "Löschen";
-        deleteBtn.style.background = "#dc2626";
-        deleteBtn.addEventListener("click", () => deleteScript(s.id));
-
-        actionsDiv.appendChild(openBtn);
-        actionsDiv.appendChild(deleteBtn);
-
-        li.appendChild(mainDiv);
-        li.appendChild(actionsDiv);
-        scriptList.appendChild(li);
+      div.addEventListener("click", () => {
+        selectFolder(folder.id);
       });
 
-      updateEventScriptOptions();
-    }
-
-    function selectScript(id) {
-      currentScriptId = id;
-      const script = scripts.find(s => s.id === id);
-      if (!script) return;
-
-      detailTitle.textContent = "Skript: " + script.title;
-      const parts = [];
-      if (script.date) parts.push(script.date);
-      if (script.time) parts.push(script.time + " Uhr");
-      detailMeta.textContent = parts.join(" · ") || "Kein Datum/Uhrzeit gesetzt.";
-
-      scriptDetailCard.classList.remove("hidden");
-      answerBox.textContent = "";
-      questionInput.value = "";
-      testContainer.innerHTML = "";
-      testResult.textContent = "";
-      checkTestBtn.classList.add("hidden");
-    }
-
-    function deleteScript(id) {
-      if (!confirm("Willst du dieses Skript wirklich löschen?")) return;
-      scripts = scripts.filter(s => s.id !== id);
-      saveScripts();
-      renderScriptList();
-      if (currentScriptId === id) {
-        currentScriptId = null;
-        scriptDetailCard.classList.add("hidden");
-      }
-      // Events behalten ihre scriptId; wenn du willst, kannst du sie hier auch entfernen
-    }
-
-    uploadForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const titleInput = document.getElementById("scriptTitle");
-      const pdfInput = document.getElementById("pdfFile");
-      const dateInput = document.getElementById("scriptDate");
-      const timeInput = document.getElementById("scriptTime");
-
-      const title = titleInput.value.trim();
-      const file = pdfInput.files[0];
-      const date = dateInput.value;
-      const time = timeInput.value;
-
-      if (!title || !file || !date || !time) {
-        alert("Bitte Titel, Datum, Uhrzeit und PDF auswählen.");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        const pdfDataUrl = reader.result; // sollte "data:application/pdf;base64,..." sein
-
-        const newScript = {
-          id: Date.now(),
-          title,
-          pdfDataUrl,
-          date,
-          time,
-          previewText: `Dies ist ein Platzhalter-Text für das Skript "${title}". Verwende das echte PDF zum Lernen.`,
-          createdAt: Date.now()
-        };
-
-        scripts.push(newScript);
-        saveScripts();
-        renderScriptList();
-        selectScript(newScript.id);
-        uploadForm.reset();
-      };
-      reader.readAsDataURL(file);
+      folderList.appendChild(div);
     });
+  }
 
-    // PDF öffnen (fix: einfache Prüfung)
-    openPdfBtn.addEventListener("click", () => {
-      if (!currentScriptId) return;
-      const script = scripts.find(s => s.id === currentScriptId);
-      if (!script || !script.pdfDataUrl) {
-        alert("Für dieses Skript ist keine PDF-Datei gespeichert.");
-        return;
-      }
-      // Öffnet die Data-URL im neuen Tab/Fenster
-      window.open(script.pdfDataUrl, "_blank");
-    });
 
-    // Text-to-Speech Demo
-    let speechUtterance = null;
-    playAudioBtn.addEventListener("click", () => {
-      if (!currentScriptId) return;
-      const script = scripts.find(s => s.id === currentScriptId);
-      if (!script) return;
-      if (speechSynthesis.speaking) {
-        speechSynthesis.cancel();
-      }
-      const text = script.previewText || `Dies ist das Skript ${script.title}.`;
-      speechUtterance = new SpeechSynthesisUtterance(text);
-      speechUtterance.lang = "de-DE";
-      speechSynthesis.speak(speechUtterance);
-    });
-    stopAudioBtn.addEventListener("click", () => {
-      if (speechSynthesis.speaking) {
-        speechSynthesis.cancel();
-      }
-    });
+  function selectFolder(folderId) {
 
-    // Fake-KI
-    askBtn.addEventListener("click", () => {
-      if (!currentScriptId) return;
-      const question = questionInput.value.trim();
-      if (!question) {
-        alert("Bitte eine Frage eingeben.");
-        return;
-      }
-      const script = scripts.find(s => s.id === currentScriptId);
-      answerBox.textContent = "Die KI denkt nach...";
-      askBtn.disabled = true;
-      setTimeout(() => {
-        answerBox.textContent =
-          `Dies ist eine simulierte KI-Antwort zu deiner Frage: "${question}". ` +
-          `Nutze das Skript "${script.title}", um dir passende Definitionen und Beispiele anzuschauen.`;
-        askBtn.disabled = false;
-      }, 700);
-    });
+    currentFolderId = folderId;
 
-    generateTestBtn.addEventListener("click", () => {
-      if (!currentScriptId) return;
-      const script = scripts.find(s => s.id === currentScriptId);
-      const questions = [
-        {
-          text: `Worum geht es hauptsächlich im Skript "${script.title}"?`,
-          options: [
-            "Um ein Thema aus deiner Vorlesung.",
-            "Um ein Kochrezept.",
-            "Um zufällige Themen.",
-            "Um nichts Konkretes."
-          ],
-          correctIndex: 0
-        },
-        {
-          text: "Was ist eine sinnvolle Lernstrategie mit diesem Skript?",
-          options: [
-            "Alles ignorieren.",
-            "Nur die Bilder anschauen.",
-            "Aktiv Notizen machen und Aufgaben bearbeiten.",
-            "Nur am Abend vor der Klausur lesen."
-          ],
-          correctIndex: 2
-        }
-      ];
-      renderTest(questions);
-      testResult.textContent = "";
-    });
+    renderFolders();
 
-    function renderTest(questions) {
-      testContainer.innerHTML = "";
-      checkTestBtn.classList.remove("hidden");
+    renderWorkspace();
+  }
 
-      questions.forEach((q, index) => {
-        const block = document.createElement("div");
-        block.className = "question-block";
-        block.dataset.correctIndex = q.correctIndex;
 
-        const qText = document.createElement("div");
-        qText.className = "question-text";
-        qText.textContent = `${index + 1}. ${q.text}`;
-        block.appendChild(qText);
+  function getCurrentFolder() {
 
-        q.options.forEach((opt, optIndex) => {
-          const label = document.createElement("label");
-          label.className = "option";
-          const radio = document.createElement("input");
-          radio.type = "radio";
-          radio.name = `q_${index}`;
-          radio.value = optIndex;
-          label.appendChild(radio);
-          label.append(" " + opt);
-          block.appendChild(label);
+    return workspaceData.find(
+      f => f.id === currentFolderId
+    );
+  }
+
+
+  function renderWorkspace() {
+
+    workspaceCanvas.innerHTML = "";
+
+    const folder = getCurrentFolder();
+
+    if (!folder) return;
+
+    folder.items.forEach(item => {
+
+      const div = document.createElement("div");
+
+      div.className = "workspace-item";
+
+      div.style.left = item.x + "px";
+
+      div.style.top = item.y + "px";
+
+      div.style.width = item.width || "250px";
+
+      div.style.height = item.height || "180px";
+
+
+      const header = document.createElement("div");
+
+      header.className = "workspace-header";
+
+
+      const title = document.createElement("span");
+
+      title.textContent =
+        item.type === "image"
+        ? "Bild"
+        : "Notiz";
+
+
+      const deleteBtn = document.createElement("button");
+
+      deleteBtn.className = "delete-btn";
+
+      deleteBtn.textContent = "X";
+
+
+      deleteBtn.addEventListener("click", () => {
+
+        folder.items =
+          folder.items.filter(i => i.id !== item.id);
+
+        saveData();
+
+        renderWorkspace();
+      });
+
+
+      header.appendChild(title);
+
+      header.appendChild(deleteBtn);
+
+      div.appendChild(header);
+
+
+      if (item.type === "text") {
+
+        const textarea =
+          document.createElement("textarea");
+
+        textarea.value = item.content || "";
+
+        textarea.addEventListener("input", () => {
+
+          item.content = textarea.value;
+
+          saveData();
         });
 
-        testContainer.appendChild(block);
-      });
-
-      checkTestBtn.onclick = () => {
-        const blocks = Array.from(testContainer.getElementsByClassName("question-block"));
-        let correct = 0;
-        const total = blocks.length;
-        blocks.forEach((block, index) => {
-          const correctIndex = Number(block.dataset.correctIndex);
-          const selected = block.querySelector(`input[name="q_${index}"]:checked`);
-          if (selected && Number(selected.value) === correctIndex) correct++;
-        });
-        testResult.textContent = `Du hast ${correct} von ${total} Fragen richtig beantwortet.`;
-      };
-    }
-
-    // ------------------- Notizen -------------------
-    const noteList = document.getElementById("noteList");
-    const noteSortSelect = document.getElementById("noteSortSelect");
-    const noteTitle = document.getElementById("noteTitle");
-    const noteContent = document.getElementById("noteContent");
-    const saveNoteBtn = document.getElementById("saveNoteBtn");
-    const newNoteBtn = document.getElementById("newNoteBtn");
-    const noteStatus = document.getElementById("noteStatus");
-
-    function renderNotes() {
-      noteList.innerHTML = "";
-      if (notes.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "Noch keine Notizen angelegt.";
-        noteList.appendChild(li);
-        return;
+        div.appendChild(textarea);
       }
-      const mode = noteSortSelect.value;
-      notes.sort((a, b) => {
-        const tA = (a.title || "").toLowerCase();
-        const tB = (b.title || "").toLowerCase();
-        const uA = a.updatedAt || 0;
-        const uB = b.updatedAt || 0;
-        switch (mode) {
-          case "title_asc": return tA.localeCompare(tB);
-          case "title_desc": return tB.localeCompare(tA);
-          case "updated_asc": return uA - uB;
-          case "updated_desc":
-          default: return uB - uA;
-        }
-      });
 
-      notes.forEach(n => {
-        const li = document.createElement("li");
-        li.className = "note-item";
-        li.addEventListener("click", () => selectNote(n.id));
 
-        const tSpan = document.createElement("div");
-        tSpan.className = "note-item-title";
-        tSpan.textContent = n.title || "(ohne Titel)";
+      if (item.type === "image") {
 
-        const metaSpan = document.createElement("div");
-        metaSpan.className = "note-item-meta";
-        const d = n.updatedAt ? new Date(n.updatedAt) : null;
-        metaSpan.textContent = d
-          ? "Zuletzt geändert: " + d.toLocaleString("de-DE")
-          : "Noch nie gespeichert";
+        const img = document.createElement("img");
 
-        li.appendChild(tSpan);
-        li.appendChild(metaSpan);
-        noteList.appendChild(li);
-      });
-    }
+        img.src = item.src;
 
-    function selectNote(id) {
-      currentNoteId = id;
-      const note = notes.find(n => n.id === id);
-      if (!note) return;
-      noteTitle.value = note.title || "";
-      noteContent.value = note.content || "";
-      noteStatus.textContent = "";
-    }
-
-    function clearNoteEditor() {
-      currentNoteId = null;
-      noteTitle.value = "";
-      noteContent.value = "";
-      noteStatus.textContent = "";
-    }
-
-    saveNoteBtn.addEventListener("click", () => {
-      const title = noteTitle.value.trim();
-      const content = noteContent.value;
-      if (!title && !content.trim()) {
-        alert("Bitte zumindest einen Titel oder Inhalt eingeben.");
-        return;
+        div.appendChild(img);
       }
-      const now = Date.now();
-      if (!currentNoteId) {
-        const newNote = {
-          id: now,
-          title,
-          content,
-          updatedAt: now
-        };
-        notes.push(newNote);
-        currentNoteId = newNote.id;
-      } else {
-        const note = notes.find(n => n.id === currentNoteId);
-        if (note) {
-          note.title = title;
-          note.content = content;
-          note.updatedAt = now;
-        }
-      }
-      saveNotes();
-      renderNotes();
-      noteStatus.textContent = "Notiz gespeichert.";
-      setTimeout(() => noteStatus.textContent = "", 2500);
+
+
+      makeDraggable(div, item);
+
+      workspaceCanvas.appendChild(div);
+    });
+  }
+
+
+  addTextBtn.addEventListener("click", () => {
+
+    const folder = getCurrentFolder();
+
+    if (!folder) {
+
+      alert("Bitte zuerst einen Ordner erstellen.");
+
+      return;
+    }
+
+    folder.items.push({
+
+      id: Date.now(),
+
+      type: "text",
+
+      content: "Neue Lernnotiz...",
+
+      x: 40,
+
+      y: 40,
+
+      width: "250px",
+
+      height: "180px"
     });
 
-    newNoteBtn.addEventListener("click", () => {
-      clearNoteEditor();
-    });
+    saveData();
 
-    noteSortSelect.addEventListener("change", renderNotes);
+    renderWorkspace();
+  });
 
-    // ------------------- Kalender -------------------
-    const calendarTitle = document.getElementById("calendarTitle");
-    const calendarBody = document.getElementById("calendarBody");
-    const prevMonthBtn = document.getElementById("prevMonthBtn");
-    const nextMonthBtn = document.getElementById("nextMonthBtn");
-    const eventTitle = document.getElementById("eventTitle");
-    const eventDate = document.getElementById("eventDate");
-    const eventTime = document.getElementById("eventTime");
-    const saveEventBtn = document.getElementById("saveEventBtn");
-    const eventList = document.getElementById("eventList");
 
-    function updateEventScriptOptions() {
-      const prevValue = eventScript.value;
-      eventScript.innerHTML = '<option value="">Kein Skript</option>';
-      scripts.forEach(s => {
-        const opt = document.createElement("option");
-        opt.value = String(s.id);
-        opt.textContent = s.title;
-        eventScript.appendChild(opt);
-      });
-      if (prevValue) {
-        eventScript.value = prevValue;
-      }
+  addImageBtn.addEventListener("click", () => {
+
+    const folder = getCurrentFolder();
+
+    if (!folder) {
+
+      alert("Bitte zuerst einen Ordner erstellen.");
+
+      return;
     }
 
-    function formatDateKey(date) {
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, "0");
-      const d = String(date.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
+    imageInput.click();
+  });
 
-    function renderCalendar() {
-      const monthNames = [
-        "Januar","Februar","März","April","Mai","Juni",
-        "Juli","August","September","Oktober","November","Dezember"
-      ];
-      calendarTitle.textContent = monthNames[currentMonth] + " " + currentYear;
-      calendarBody.innerHTML = "";
 
-      const firstDay = new Date(currentYear, currentMonth, 1);
-      let start = firstDay.getDay();
-      start = start === 0 ? 6 : start - 1;
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  imageInput.addEventListener("change", (e) => {
 
-      let dayNumber = 1;
-      const totalCells = start + daysInMonth;
-      const rowsNeeded = Math.ceil(totalCells / 7);
-      const todayKey = formatDateKey(today);
+    const file = e.target.files[0];
 
-      for (let rowIndex = 0; rowIndex < rowsNeeded; rowIndex++) {
-        const row = document.createElement("tr");
-        for (let colIndex = 0; colIndex < 7; colIndex++) {
-          const cell = document.createElement("td");
-          const cellIndex = rowIndex * 7 + colIndex;
-          if (cellIndex < start || dayNumber > daysInMonth) {
-            cell.textContent = "";
-            row.appendChild(cell);
-            continue;
-          }
+    if (!file) return;
 
-          const dateObj = new Date(currentYear, currentMonth, dayNumber);
-          const dateKey = formatDateKey(dateObj);
-          cell.className = "calendar-day";
-          cell.textContent = dayNumber;
+    const reader = new FileReader();
 
-          const hasEventsForDay = events.some(ev => ev.date === dateKey);
-          if (hasEventsForDay) {
-            cell.classList.add("has-event");
-          }
-          if (dateKey === todayKey) {
-            cell.classList.add("today");
-          }
+    reader.onload = () => {
 
-          cell.addEventListener("click", () => {
-            selectedDateStr = dateKey;
-            eventDate.value = dateKey;
-            renderEventList();
-          });
+      const folder = getCurrentFolder();
 
-          row.appendChild(cell);
-          dayNumber++;
-        }
-        calendarBody.appendChild(row);
-      }
+      folder.items.push({
 
-      // Nach Neuaufbau: sicherstellen, dass ein Datum gewählt ist
-      eventDate.value = selectedDateStr;
-      renderEventList();
-    }
-
-    prevMonthBtn.addEventListener("click", () => {
-      currentMonth--;
-      if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-      }
-      renderCalendar();
-    });
-    nextMonthBtn.addEventListener("click", () => {
-      currentMonth++;
-      if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-      }
-      renderCalendar();
-    });
-
-    function renderEventList() {
-      eventList.innerHTML = "";
-      const dayEvents = events
-        .filter(ev => ev.date === selectedDateStr)
-        .sort((a, b) => (a.time || "").localeCompare(b.time || ""));
-
-      if (dayEvents.length === 0) {
-        eventList.textContent = "Keine Termine an diesem Tag.";
-        return;
-      }
-
-      dayEvents.forEach(ev => {
-        const div = document.createElement("div");
-        div.className = "event-item";
-        const timeText = ev.time ? ev.time + " Uhr" : "keine Zeit";
-        const script = scripts.find(s => s.id === ev.scriptId);
-        const scriptText = script ? ` · Skript: ${script.title}` : "";
-        div.innerHTML = `<span>${timeText}</span> – ${ev.title}${scriptText}`;
-        div.addEventListener("click", () => {
-          if (ev.scriptId && scripts.find(s => s.id === ev.scriptId)) {
-            openTab("scriptTab");
-            selectScript(ev.scriptId);
-          }
-        });
-        eventList.appendChild(div);
-      });
-    }
-
-    saveEventBtn.addEventListener("click", () => {
-      const title = eventTitle.value.trim();
-      const date = eventDate.value;
-      const time = eventTime.value;
-      const scriptId = eventScript.value ? Number(eventScript.value) : null;
-
-      if (!title || !date) {
-        alert("Bitte mindestens Titel und Datum für den Termin angeben.");
-        return;
-      }
-
-      const newEvent = {
         id: Date.now(),
-        title,
-        date,
-        time,
-        scriptId
-      };
-      events.push(newEvent);
-      saveEvents();
-      selectedDateStr = date;
-      renderCalendar();
-      eventTitle.value = "";
-      eventTime.value = "";
-      eventScript.value = "";
+
+        type: "image",
+
+        src: reader.result,
+
+        x: 60,
+
+        y: 60,
+
+        width: "280px",
+
+        height: "240px"
+      });
+
+      saveData();
+
+      renderWorkspace();
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+
+  function makeDraggable(element, item) {
+
+    let isDragging = false;
+
+    let offsetX = 0;
+
+    let offsetY = 0;
+
+
+    element.addEventListener("mousedown", (e) => {
+
+      if (
+        e.target.tagName === "TEXTAREA" ||
+        e.target.tagName === "BUTTON"
+      ) {
+        return;
+      }
+
+      isDragging = true;
+
+      offsetX = e.offsetX;
+
+      offsetY = e.offsetY;
     });
 
-    // ------------------- Initialer Start -------------------
-    renderScriptList();
-    renderNotes();
-    renderCalendar();
-    eventDate.value = selectedDateStr;
-  </script>
+
+    document.addEventListener("mousemove", (e) => {
+
+      if (!isDragging) return;
+
+      const rect =
+        workspaceCanvas.getBoundingClientRect();
+
+      item.x =
+        e.clientX - rect.left - offsetX;
+
+      item.y =
+        e.clientY - rect.top - offsetY;
+
+      element.style.left = item.x + "px";
+
+      element.style.top = item.y + "px";
+    });
+
+
+    document.addEventListener("mouseup", () => {
+
+      if (isDragging) {
+
+        item.width = element.style.width;
+
+        item.height = element.style.height;
+
+        saveData();
+      }
+
+      isDragging = false;
+    });
+  }
+
+
+  renderFolders();
+
+  if (workspaceData.length > 0) {
+
+    selectFolder(workspaceData[0].id);
+  }
+
+</script>
+
 </body>
 </html>
