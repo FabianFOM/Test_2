@@ -3,212 +3,395 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lernplattform</title>
+  <title>Lernplattform Komplett</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, sans-serif;
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:system-ui,sans-serif;
     }
 
-    body {
-      background: #f4f5f7;
-      color: #222;
+    body{
+      background:#f4f5f7;
+      color:#222;
     }
 
-    .header {
-      background: #111827;
-      color: white;
-      padding: 1.5rem;
-      text-align: center;
+    .header{
+      background:#111827;
+      color:white;
+      padding:1.5rem;
+      text-align:center;
     }
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
+    .tabs{
+      display:flex;
+      justify-content:center;
+      gap:0.5rem;
+      margin-top:1rem;
+      flex-wrap:wrap;
     }
 
-    .tab-btn {
-      padding: 0.6rem 1rem;
-      border: none;
-      border-radius: 999px;
-      background: #e5e7eb;
-      cursor: pointer;
+    .tab-btn{
+      border:none;
+      padding:0.6rem 1rem;
+      border-radius:999px;
+      background:#e5e7eb;
+      cursor:pointer;
     }
 
-    .tab-btn.active {
-      background: #2563eb;
-      color: white;
+    .tab-btn.active{
+      background:#2563eb;
+      color:white;
     }
 
-    .container {
-      max-width: 1300px;
-      margin: 1rem auto;
-      padding: 1rem;
+    .container{
+      max-width:1300px;
+      margin:1rem auto;
+      padding:1rem;
     }
 
-    .card {
-      background: white;
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    .card{
+      background:white;
+      border-radius:10px;
+      padding:1.5rem;
+      box-shadow:0 1px 6px rgba(0,0,0,0.08);
     }
 
-    .hidden {
-      display: none;
+    .hidden{
+      display:none;
     }
 
-    button {
-      border: none;
-      background: #2563eb;
-      color: white;
-      padding: 0.6rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
+    button{
+      border:none;
+      background:#2563eb;
+      color:white;
+      padding:0.6rem 1rem;
+      border-radius:6px;
+      cursor:pointer;
     }
 
-    button:hover {
-      background: #1d4ed8;
+    button:hover{
+      background:#1d4ed8;
     }
 
     input,
     textarea,
-    select {
-      width: 100%;
-      padding: 0.6rem;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
-      margin-top: 0.4rem;
-      margin-bottom: 1rem;
+    select{
+      width:100%;
+      padding:0.6rem;
+      border:1px solid #d1d5db;
+      border-radius:6px;
+      margin-top:0.3rem;
+      margin-bottom:1rem;
     }
 
-    textarea {
-      resize: vertical;
+    textarea{
+      resize:vertical;
     }
 
-    h2 {
-      margin-bottom: 1rem;
+    h2{
+      margin-bottom:1rem;
     }
 
-    .workspace-toolbar {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:1rem;
     }
 
-    .workspace-layout {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 1rem;
+    .script-item,
+    .note-item,
+    .event-item{
+      padding:0.7rem;
+      border-bottom:1px solid #e5e7eb;
+      cursor:pointer;
     }
 
-    .folder-sidebar {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      padding: 1rem;
-      min-height: 700px;
+    .calendar{
+      width:100%;
+      border-collapse:collapse;
     }
 
-    .folder-item {
-      padding: 0.7rem;
-      border-radius: 8px;
-      background: #f3f4f6;
-      margin-bottom: 0.5rem;
-      cursor: pointer;
+    .calendar td,
+    .calendar th{
+      border:1px solid #e5e7eb;
+      padding:0.8rem;
+      text-align:center;
     }
 
-    .folder-item:hover {
-      background: #dbeafe;
+    .calendar-day{
+      cursor:pointer;
     }
 
-    .folder-item.active {
-      background: #2563eb;
-      color: white;
+    .today{
+      background:#dbeafe;
     }
 
-    .workspace-canvas {
-      position: relative;
-      min-height: 700px;
-      background: white;
-      border: 2px dashed #cbd5e1;
-      border-radius: 10px;
-      overflow: hidden;
+    .has-event{
+      background:#dcfce7;
     }
 
-    .workspace-item {
-      position: absolute;
-      width: 250px;
-      min-height: 180px;
-      background: #f9fafb;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      padding: 0.75rem;
-      resize: both;
-      overflow: auto;
-      cursor: move;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    /* ========================= */
+    /* WORKSPACE */
+    /* ========================= */
+
+    .workspace-layout{
+      display:grid;
+      grid-template-columns:260px 1fr;
+      gap:1rem;
+      margin-top:1rem;
     }
 
-    .workspace-item textarea {
-      border: none;
-      resize: none;
-      background: transparent;
-      outline: none;
-      height: 120px;
-      margin: 0;
+    .folder-sidebar{
+      background:white;
+      border-radius:8px;
+      padding:1rem;
+      border:1px solid #e5e7eb;
+      min-height:700px;
     }
 
-    .workspace-item img {
-      width: 100%;
-      border-radius: 8px;
-      margin-top: 0.5rem;
+    .folder-item{
+      padding:0.7rem;
+      border-radius:8px;
+      background:#f3f4f6;
+      margin-bottom:0.5rem;
+      cursor:pointer;
     }
 
-    .workspace-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
+    .folder-item.active{
+      background:#2563eb;
+      color:white;
     }
 
-    .delete-btn {
-      background: #dc2626;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.8rem;
+    .workspace-toolbar{
+      display:flex;
+      gap:0.5rem;
+      flex-wrap:wrap;
+      margin-top:1rem;
+      margin-bottom:1rem;
     }
 
-    @media(max-width: 900px) {
-      .workspace-layout {
-        grid-template-columns: 1fr;
+    .workspace-canvas{
+      position:relative;
+      background:white;
+      border:2px dashed #cbd5e1;
+      border-radius:10px;
+      min-height:700px;
+      overflow:hidden;
+    }
+
+    .workspace-item{
+      position:absolute;
+      width:260px;
+      min-height:180px;
+      background:#f9fafb;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+      padding:0.75rem;
+      resize:both;
+      overflow:auto;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .workspace-item textarea{
+      width:100%;
+      height:120px;
+      border:none;
+      resize:none;
+      background:transparent;
+      outline:none;
+    }
+
+    .workspace-item img{
+      width:100%;
+      border-radius:8px;
+      margin-top:0.5rem;
+    }
+
+    .workspace-header{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:0.5rem;
+      cursor:move;
+    }
+
+    .delete-item-btn{
+      background:#dc2626;
+      padding:0.3rem 0.5rem;
+      font-size:0.8rem;
+    }
+
+    @media(max-width:900px){
+
+      .grid-2{
+        grid-template-columns:1fr;
       }
+
+      .workspace-layout{
+        grid-template-columns:1fr;
+      }
+
     }
+
   </style>
 </head>
 
 <body>
 
 <header class="header">
+
   <h1>Lernplattform</h1>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="workspaceTab">
+
+    <button class="tab-btn active" data-tab="scriptTab">
+      Skript
+    </button>
+
+    <button class="tab-btn" data-tab="notesTab">
+      Notizen
+    </button>
+
+    <button class="tab-btn" data-tab="calendarTab">
+      Kalender
+    </button>
+
+    <button class="tab-btn" data-tab="workspaceTab">
       Workspace
     </button>
+
   </div>
+
 </header>
 
 <main class="container">
 
-  <section id="workspaceTab" class="card">
+  <!-- ========================= -->
+  <!-- SKRIPT -->
+  <!-- ========================= -->
 
-    <h2>Workspace / Lernfläche</h2>
+  <section id="scriptTab" class="card">
+
+    <h2>Skripte</h2>
+
+    <div class="grid-2">
+
+      <div>
+
+        <input type="text" id="scriptTitle" placeholder="Skript Titel">
+
+        <input type="file" id="pdfFile" accept="application/pdf">
+
+        <button id="saveScriptBtn">
+          Skript speichern
+        </button>
+
+        <div id="scriptList"></div>
+
+      </div>
+
+      <div>
+
+        <h3 id="scriptDetailTitle">
+          Kein Skript ausgewählt
+        </h3>
+
+        <button id="openPdfBtn">
+          PDF öffnen
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================= -->
+  <!-- NOTIZEN -->
+  <!-- ========================= -->
+
+  <section id="notesTab" class="card hidden">
+
+    <h2>Notizen</h2>
+
+    <div class="grid-2">
+
+      <div>
+
+        <div id="noteList"></div>
+
+      </div>
+
+      <div>
+
+        <input type="text" id="noteTitle" placeholder="Titel">
+
+        <textarea
+          id="noteContent"
+          rows="10"
+          placeholder="Notiz..."
+        ></textarea>
+
+        <button id="saveNoteBtn">
+          Notiz speichern
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================= -->
+  <!-- KALENDER -->
+  <!-- ========================= -->
+
+  <section id="calendarTab" class="card hidden">
+
+    <h2>Kalender</h2>
+
+    <table class="calendar">
+
+      <thead>
+        <tr>
+          <th>Mo</th>
+          <th>Di</th>
+          <th>Mi</th>
+          <th>Do</th>
+          <th>Fr</th>
+          <th>Sa</th>
+          <th>So</th>
+        </tr>
+      </thead>
+
+      <tbody id="calendarBody"></tbody>
+
+    </table>
+
+    <br>
+
+    <input type="text" id="eventTitle" placeholder="Termin">
+
+    <input type="date" id="eventDate">
+
+    <button id="saveEventBtn">
+      Termin speichern
+    </button>
+
+    <div id="eventList"></div>
+
+  </section>
+
+  <!-- ========================= -->
+  <!-- WORKSPACE -->
+  <!-- ========================= -->
+
+  <section id="workspaceTab" class="card hidden">
+
+    <h2>Workspace</h2>
 
     <div class="workspace-toolbar">
 
@@ -216,7 +399,7 @@
         Ordner erstellen
       </button>
 
-      <button id="addTextBtn">
+      <button id="addTextBoxBtn">
         Textbox hinzufügen
       </button>
 
@@ -226,7 +409,7 @@
 
       <input
         type="file"
-        id="imageInput"
+        id="imageUploadInput"
         accept="image/*"
         style="display:none;"
       >
@@ -236,9 +419,11 @@
     <div class="workspace-layout">
 
       <div class="folder-sidebar">
+
         <h3>Ordner</h3>
 
         <div id="folderList"></div>
+
       </div>
 
       <div
@@ -254,52 +439,422 @@
 
 <script>
 
-  const STORAGE_KEY = "workspace_data_v1";
+  /* ========================= */
+  /* TABS */
+  /* ========================= */
+
+  const tabButtons =
+    document.querySelectorAll(".tab-btn");
+
+  const scriptTab =
+    document.getElementById("scriptTab");
+
+  const notesTab =
+    document.getElementById("notesTab");
+
+  const calendarTab =
+    document.getElementById("calendarTab");
+
+  const workspaceTab =
+    document.getElementById("workspaceTab");
+
+
+  tabButtons.forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+      tabButtons.forEach(b =>
+        b.classList.remove("active")
+      );
+
+      btn.classList.add("active");
+
+      scriptTab.classList.add("hidden");
+      notesTab.classList.add("hidden");
+      calendarTab.classList.add("hidden");
+      workspaceTab.classList.add("hidden");
+
+      document
+        .getElementById(btn.dataset.tab)
+        .classList.remove("hidden");
+    });
+  });
+
+
+  /* ========================= */
+  /* SCRIPTS */
+  /* ========================= */
+
+  const SCRIPT_KEY = "scripts_v1";
+
+  let scripts =
+    JSON.parse(localStorage.getItem(SCRIPT_KEY) || "[]");
+
+  let currentScriptId = null;
+
+  const scriptList =
+    document.getElementById("scriptList");
+
+  const scriptTitle =
+    document.getElementById("scriptTitle");
+
+  const pdfFile =
+    document.getElementById("pdfFile");
+
+  const saveScriptBtn =
+    document.getElementById("saveScriptBtn");
+
+  const scriptDetailTitle =
+    document.getElementById("scriptDetailTitle");
+
+  const openPdfBtn =
+    document.getElementById("openPdfBtn");
+
+
+  function saveScripts(){
+
+    localStorage.setItem(
+      SCRIPT_KEY,
+      JSON.stringify(scripts)
+    );
+  }
+
+
+  function renderScripts(){
+
+    scriptList.innerHTML = "";
+
+    scripts.forEach(script => {
+
+      const div = document.createElement("div");
+
+      div.className = "script-item";
+
+      div.textContent = script.title;
+
+      div.addEventListener("click", () => {
+
+        currentScriptId = script.id;
+
+        scriptDetailTitle.textContent =
+          script.title;
+      });
+
+      scriptList.appendChild(div);
+    });
+  }
+
+
+  saveScriptBtn.addEventListener("click", () => {
+
+    const title = scriptTitle.value;
+
+    const file = pdfFile.files[0];
+
+    if(!title || !file){
+
+      alert("Titel + PDF auswählen");
+
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      scripts.push({
+
+        id:Date.now(),
+
+        title,
+
+        pdf:reader.result
+      });
+
+      saveScripts();
+
+      renderScripts();
+
+      scriptTitle.value = "";
+
+      pdfFile.value = "";
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+
+  openPdfBtn.addEventListener("click", () => {
+
+    if(!currentScriptId) return;
+
+    const script =
+      scripts.find(s => s.id === currentScriptId);
+
+    if(script){
+
+      window.open(script.pdf);
+    }
+  });
+
+
+  /* ========================= */
+  /* NOTIZEN */
+  /* ========================= */
+
+  const NOTE_KEY = "notes_v1";
+
+  let notes =
+    JSON.parse(localStorage.getItem(NOTE_KEY) || "[]");
+
+  const noteList =
+    document.getElementById("noteList");
+
+  const noteTitle =
+    document.getElementById("noteTitle");
+
+  const noteContent =
+    document.getElementById("noteContent");
+
+  const saveNoteBtn =
+    document.getElementById("saveNoteBtn");
+
+
+  function saveNotes(){
+
+    localStorage.setItem(
+      NOTE_KEY,
+      JSON.stringify(notes)
+    );
+  }
+
+
+  function renderNotes(){
+
+    noteList.innerHTML = "";
+
+    notes.forEach(note => {
+
+      const div = document.createElement("div");
+
+      div.className = "note-item";
+
+      div.textContent = note.title;
+
+      div.addEventListener("click", () => {
+
+        noteTitle.value = note.title;
+
+        noteContent.value = note.content;
+      });
+
+      noteList.appendChild(div);
+    });
+  }
+
+
+  saveNoteBtn.addEventListener("click", () => {
+
+    notes.push({
+
+      id:Date.now(),
+
+      title:noteTitle.value,
+
+      content:noteContent.value
+    });
+
+    saveNotes();
+
+    renderNotes();
+
+    noteTitle.value = "";
+
+    noteContent.value = "";
+  });
+
+
+  /* ========================= */
+  /* KALENDER */
+  /* ========================= */
+
+  const EVENT_KEY = "events_v1";
+
+  let events =
+    JSON.parse(localStorage.getItem(EVENT_KEY) || "[]");
+
+  const calendarBody =
+    document.getElementById("calendarBody");
+
+  const eventTitle =
+    document.getElementById("eventTitle");
+
+  const eventDate =
+    document.getElementById("eventDate");
+
+  const saveEventBtn =
+    document.getElementById("saveEventBtn");
+
+  const eventList =
+    document.getElementById("eventList");
+
+
+  function saveEvents(){
+
+    localStorage.setItem(
+      EVENT_KEY,
+      JSON.stringify(events)
+    );
+  }
+
+
+  function renderCalendar(){
+
+    const now = new Date();
+
+    const year = now.getFullYear();
+
+    const month = now.getMonth();
+
+    const firstDay =
+      new Date(year,month,1);
+
+    const days =
+      new Date(year,month+1,0).getDate();
+
+    let start =
+      firstDay.getDay();
+
+    start = start === 0 ? 6 : start - 1;
+
+    calendarBody.innerHTML = "";
+
+    let row =
+      document.createElement("tr");
+
+    for(let i=0;i<start;i++){
+
+      row.appendChild(
+        document.createElement("td")
+      );
+    }
+
+    for(let day=1; day<=days; day++){
+
+      if(row.children.length === 7){
+
+        calendarBody.appendChild(row);
+
+        row = document.createElement("tr");
+      }
+
+      const cell =
+        document.createElement("td");
+
+      cell.className = "calendar-day";
+
+      cell.textContent = day;
+
+      row.appendChild(cell);
+    }
+
+    calendarBody.appendChild(row);
+  }
+
+
+  saveEventBtn.addEventListener("click", () => {
+
+    events.push({
+
+      id:Date.now(),
+
+      title:eventTitle.value,
+
+      date:eventDate.value
+    });
+
+    saveEvents();
+
+    renderEventList();
+  });
+
+
+  function renderEventList(){
+
+    eventList.innerHTML = "";
+
+    events.forEach(event => {
+
+      const div =
+        document.createElement("div");
+
+      div.className = "event-item";
+
+      div.textContent =
+        event.date + " - " + event.title;
+
+      eventList.appendChild(div);
+    });
+  }
+
+
+  /* ========================= */
+  /* WORKSPACE */
+  /* ========================= */
+
+  const WORKSPACE_KEY =
+    "workspace_v1";
 
   let workspaceData =
-    JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    JSON.parse(
+      localStorage.getItem(WORKSPACE_KEY)
+      || "[]"
+    );
 
   let currentFolderId = null;
-
-  const folderList =
-    document.getElementById("folderList");
 
   const workspaceCanvas =
     document.getElementById("workspaceCanvas");
 
+  const folderList =
+    document.getElementById("folderList");
+
   const createFolderBtn =
     document.getElementById("createFolderBtn");
 
-  const addTextBtn =
-    document.getElementById("addTextBtn");
+  const addTextBoxBtn =
+    document.getElementById("addTextBoxBtn");
 
   const addImageBtn =
     document.getElementById("addImageBtn");
 
-  const imageInput =
-    document.getElementById("imageInput");
+  const imageUploadInput =
+    document.getElementById("imageUploadInput");
 
 
-  function saveData() {
+  function saveWorkspace(){
 
     localStorage.setItem(
-      STORAGE_KEY,
+      WORKSPACE_KEY,
       JSON.stringify(workspaceData)
     );
   }
 
 
-  function createFolder(name) {
+  function createFolder(name){
 
     const folder = {
-      id: Date.now(),
+
+      id:Date.now(),
+
       name,
-      items: []
+
+      items:[]
     };
 
     workspaceData.push(folder);
 
-    saveData();
+    saveWorkspace();
 
     renderFolders();
 
@@ -309,39 +864,35 @@
 
   createFolderBtn.addEventListener("click", () => {
 
-    const name = prompt("Ordnername:");
+    const name =
+      prompt("Ordnername:");
 
-    if (!name) return;
+    if(!name) return;
 
     createFolder(name);
   });
 
 
-  function renderFolders() {
+  function renderFolders(){
 
     folderList.innerHTML = "";
 
-    if (workspaceData.length === 0) {
-
-      folderList.innerHTML =
-        "<p>Noch keine Ordner vorhanden.</p>";
-
-      return;
-    }
-
     workspaceData.forEach(folder => {
 
-      const div = document.createElement("div");
+      const div =
+        document.createElement("div");
 
       div.className = "folder-item";
 
-      if (folder.id === currentFolderId) {
+      if(folder.id === currentFolderId){
+
         div.classList.add("active");
       }
 
       div.textContent = folder.name;
 
       div.addEventListener("click", () => {
+
         selectFolder(folder.id);
       });
 
@@ -350,7 +901,7 @@
   }
 
 
-  function selectFolder(folderId) {
+  function selectFolder(folderId){
 
     currentFolderId = folderId;
 
@@ -360,7 +911,7 @@
   }
 
 
-  function getCurrentFolder() {
+  function getCurrentFolder(){
 
     return workspaceData.find(
       f => f.id === currentFolderId
@@ -368,35 +919,39 @@
   }
 
 
-  function renderWorkspace() {
+  function renderWorkspace(){
 
     workspaceCanvas.innerHTML = "";
 
-    const folder = getCurrentFolder();
+    const folder =
+      getCurrentFolder();
 
-    if (!folder) return;
+    if(!folder) return;
 
     folder.items.forEach(item => {
 
-      const div = document.createElement("div");
+      const div =
+        document.createElement("div");
 
-      div.className = "workspace-item";
+      div.className =
+        "workspace-item";
 
-      div.style.left = item.x + "px";
+      div.style.left =
+        item.x + "px";
 
-      div.style.top = item.y + "px";
-
-      div.style.width = item.width || "250px";
-
-      div.style.height = item.height || "180px";
-
-
-      const header = document.createElement("div");
-
-      header.className = "workspace-header";
+      div.style.top =
+        item.y + "px";
 
 
-      const title = document.createElement("span");
+      const header =
+        document.createElement("div");
+
+      header.className =
+        "workspace-header";
+
+
+      const title =
+        document.createElement("span");
 
       title.textContent =
         item.type === "image"
@@ -404,9 +959,11 @@
         : "Notiz";
 
 
-      const deleteBtn = document.createElement("button");
+      const deleteBtn =
+        document.createElement("button");
 
-      deleteBtn.className = "delete-btn";
+      deleteBtn.className =
+        "delete-item-btn";
 
       deleteBtn.textContent = "X";
 
@@ -414,9 +971,11 @@
       deleteBtn.addEventListener("click", () => {
 
         folder.items =
-          folder.items.filter(i => i.id !== item.id);
+          folder.items.filter(
+            i => i.id !== item.id
+          );
 
-        saveData();
+        saveWorkspace();
 
         renderWorkspace();
       });
@@ -429,27 +988,30 @@
       div.appendChild(header);
 
 
-      if (item.type === "text") {
+      if(item.type === "text"){
 
         const textarea =
           document.createElement("textarea");
 
-        textarea.value = item.content || "";
+        textarea.value =
+          item.content;
 
         textarea.addEventListener("input", () => {
 
-          item.content = textarea.value;
+          item.content =
+            textarea.value;
 
-          saveData();
+          saveWorkspace();
         });
 
         div.appendChild(textarea);
       }
 
 
-      if (item.type === "image") {
+      if(item.type === "image"){
 
-        const img = document.createElement("img");
+        const img =
+          document.createElement("img");
 
         img.src = item.src;
 
@@ -457,42 +1019,41 @@
       }
 
 
-      makeDraggable(div, item);
+      makeDraggable(div,header,item);
 
       workspaceCanvas.appendChild(div);
     });
   }
 
 
-  addTextBtn.addEventListener("click", () => {
+  addTextBoxBtn.addEventListener("click", () => {
 
-    const folder = getCurrentFolder();
+    const folder =
+      getCurrentFolder();
 
-    if (!folder) {
+    if(!folder){
 
-      alert("Bitte zuerst einen Ordner erstellen.");
+      alert(
+        "Bitte zuerst einen Ordner erstellen."
+      );
 
       return;
     }
 
     folder.items.push({
 
-      id: Date.now(),
+      id:Date.now(),
 
-      type: "text",
+      type:"text",
 
-      content: "Neue Lernnotiz...",
+      content:"Neue Lernnotiz...",
 
-      x: 40,
+      x:50,
 
-      y: 40,
-
-      width: "250px",
-
-      height: "180px"
+      y:50
     });
 
-    saveData();
+    saveWorkspace();
 
     renderWorkspace();
   });
@@ -500,123 +1061,142 @@
 
   addImageBtn.addEventListener("click", () => {
 
-    const folder = getCurrentFolder();
+    const folder =
+      getCurrentFolder();
 
-    if (!folder) {
+    if(!folder){
 
-      alert("Bitte zuerst einen Ordner erstellen.");
+      alert(
+        "Bitte zuerst einen Ordner erstellen."
+      );
 
       return;
     }
 
-    imageInput.click();
+    imageUploadInput.click();
   });
 
 
-  imageInput.addEventListener("change", (e) => {
+  imageUploadInput.addEventListener(
+    "change",
+    (e) => {
 
-    const file = e.target.files[0];
+      const file =
+        e.target.files[0];
 
-    if (!file) return;
+      if(!file) return;
 
-    const reader = new FileReader();
+      const reader =
+        new FileReader();
 
-    reader.onload = () => {
+      reader.onload = () => {
 
-      const folder = getCurrentFolder();
+        const folder =
+          getCurrentFolder();
 
-      folder.items.push({
+        folder.items.push({
 
-        id: Date.now(),
+          id:Date.now(),
 
-        type: "image",
+          type:"image",
 
-        src: reader.result,
+          src:reader.result,
 
-        x: 60,
+          x:80,
 
-        y: 60,
+          y:80
+        });
 
-        width: "280px",
+        saveWorkspace();
 
-        height: "240px"
-      });
+        renderWorkspace();
+      };
 
-      saveData();
-
-      renderWorkspace();
-    };
-
-    reader.readAsDataURL(file);
-  });
-
-
-  function makeDraggable(element, item) {
-
-    let isDragging = false;
-
-    let offsetX = 0;
-
-    let offsetY = 0;
+      reader.readAsDataURL(file);
+    }
+  );
 
 
-    element.addEventListener("mousedown", (e) => {
+  function makeDraggable(
+    element,
+    handle,
+    item
+  ){
 
-      if (
-        e.target.tagName === "TEXTAREA" ||
-        e.target.tagName === "BUTTON"
-      ) {
-        return;
+    let dragging = false;
+
+    let startX = 0;
+
+    let startY = 0;
+
+
+    handle.addEventListener(
+      "mousedown",
+      (e) => {
+
+        dragging = true;
+
+        startX =
+          e.clientX - item.x;
+
+        startY =
+          e.clientY - item.y;
       }
-
-      isDragging = true;
-
-      offsetX = e.offsetX;
-
-      offsetY = e.offsetY;
-    });
+    );
 
 
-    document.addEventListener("mousemove", (e) => {
+    document.addEventListener(
+      "mousemove",
+      (e) => {
 
-      if (!isDragging) return;
+        if(!dragging) return;
 
-      const rect =
-        workspaceCanvas.getBoundingClientRect();
+        item.x =
+          e.clientX - startX;
 
-      item.x =
-        e.clientX - rect.left - offsetX;
+        item.y =
+          e.clientY - startY;
 
-      item.y =
-        e.clientY - rect.top - offsetY;
+        element.style.left =
+          item.x + "px";
 
-      element.style.left = item.x + "px";
-
-      element.style.top = item.y + "px";
-    });
-
-
-    document.addEventListener("mouseup", () => {
-
-      if (isDragging) {
-
-        item.width = element.style.width;
-
-        item.height = element.style.height;
-
-        saveData();
+        element.style.top =
+          item.y + "px";
       }
+    );
 
-      isDragging = false;
-    });
+
+    document.addEventListener(
+      "mouseup",
+      () => {
+
+        dragging = false;
+
+        saveWorkspace();
+      }
+    );
   }
 
 
+  /* ========================= */
+  /* START */
+  /* ========================= */
+
+  renderScripts();
+
+  renderNotes();
+
+  renderCalendar();
+
+  renderEventList();
+
   renderFolders();
 
-  if (workspaceData.length > 0) {
+  if(workspaceData.length > 0){
 
-    selectFolder(workspaceData[0].id);
+    selectFolder(
+      workspaceData[0].id
+    );
   }
 
 </script>
